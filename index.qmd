@@ -1,6 +1,6 @@
 # Preface {.unnumbered}
 
-"Harvest Data with Python and GEE" is a guide for agricultural professionals, environmental scientists, graduate students, and data enthusiasts looking to leverage the power of Python in conjunction with Google Earth Engine (GEE) to make better data-driven decisions, and understand and manage our planet's agricultural resources. 
+"PyNotes GEE" is a guide for agricultural professionals, environmental scientists, graduate students, and data enthusiasts looking to leverage the power of Python in conjunction with Google Earth Engine (GEE) to make better data-driven decisions, and understand and manage our planet's agricultural resources. 
 
 Google Earth Engine is an advanced cloud-based platform designed for petabyte-scale analysis of geospatial data, particularly satellite imagery. It provides a comprehensive set of tools for analyzing and visualizing data, facilitating the extraction of meaningful insights from the Earth's surface over time. The powerful computing infrastructure behind GEE allows researchers to execute complex geospatial analyses that would be computationally intensive or infeasible on conventional laptops and desktop computers. Through its accessible interface, GEE enables automated processing pipelines using Python. 
 

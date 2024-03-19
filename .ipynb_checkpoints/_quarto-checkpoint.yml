@@ -3,12 +3,12 @@ project:
   output-dir: docs
 
 book:
-  title: "Harvest Data with Python and GEE"
+  title: "PyNotes GEE"
   author: "Andres Patrignani"
   date: "3/18/2024"
   date-format: "long"
   cover-image: cover.jpg
-  repo-url: https://github.com/soilwater/harvestearthdatawithpython
+  repo-url: https://github.com/soilwater/pynotes-gee
   repo-actions: [edit]
   downloads: [pdf]
   page-navigation: true
