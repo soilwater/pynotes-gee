@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-01-26">
 <meta name="keywords" content="gee, time series, area">
 
-<title>PyNotes GEE - 8&nbsp; Reduce a image collection to time series</title>
+<title>PyNotes GEE - 8&nbsp; Reduce collection to time series</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -123,7 +123,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/reduce_image_collection_to_timeseries.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce a image collection to time series</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/reduce_image_collection_to_timeseries.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce collection to time series</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -197,13 +197,13 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/reduce_image_collection_to_image.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Reduce image collection to image</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Reduce collection to image</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/reduce_image_collection_to_timeseries.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce a image collection to time series</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce collection to time series</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,7 +268,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce a image collection to time series</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce collection to time series</span></h1>
 </div>
 
 
@@ -295,7 +295,8 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 
 </header>
 
-<p>In geospatial analysis, image collections can be simplified using reduction techniques to distill meaningful trends. This tutorial will guide you through the process of simplifying each image in the collection to a single average value representing the entire region of interest, thus, creating of a time series that reflects the mean value for a region over time.</p>
+<p>In geospatial analysis, collections of images are typically aggregated into images, but it is also possible to aggregate image collections in the form of a time series to visualize meaningful trends or patterns over a given area and time range.</p>
+<p>This tutorial will guide you through the process of synthesizing each image in a collection of images into a single average value representing the entire region of interest, thus, creating a time series that reflects the mean value for a region over time.</p>
 <div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
@@ -763,7 +764,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../notebooks/reduce_image_collection_to_image.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Reduce image collection to image</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Reduce collection to image</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

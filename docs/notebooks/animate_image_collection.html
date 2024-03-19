@@ -255,8 +255,9 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#animation-in-the-cloud" id="toc-animation-in-the-cloud" class="nav-link active" data-scroll-target="#animation-in-the-cloud">Animation in the cloud</a></li>
-  <li><a href="#animation-in-local-disk" id="toc-animation-in-local-disk" class="nav-link" data-scroll-target="#animation-in-local-disk">Animation in local disk</a></li>
+  <li><a href="#example-1-animation-of-vegetation-dynamics-in-the-cloud" id="toc-example-1-animation-of-vegetation-dynamics-in-the-cloud" class="nav-link active" data-scroll-target="#example-1-animation-of-vegetation-dynamics-in-the-cloud">Example 1: Animation of vegetation dynamics in the cloud</a></li>
+  <li><a href="#example-2-animation-of-vegetation-dynamics-in-local-disk" id="toc-example-2-animation-of-vegetation-dynamics-in-local-disk" class="nav-link" data-scroll-target="#example-2-animation-of-vegetation-dynamics-in-local-disk">Example 2: Animation of vegetation dynamics in local disk</a></li>
+  <li><a href="#example-3-soil-moisture-dynamics" id="toc-example-3-soil-moisture-dynamics" class="nav-link" data-scroll-target="#example-3-soil-moisture-dynamics">Example 3: Soil moisture dynamics</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/soilwater/pynotes-gee/blob/main/notebooks/animate_image_collection.ipynb" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
@@ -293,12 +294,13 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </header>
 
 <p>When working with spatial data in the form of images spanning a period of time, animations are an effective way to showcase temporal and spatial changes across a region. Similar to a video, animations are composed of sequential frames and Google Earth Engine provides tools for creating and retrieving animations via URL. Alternatively, individual images can be downloaded for local processing, that enable the creation of animations using plotting libraries like Matplotlib. This tutorial focuses on the former approach, exploring how to leverage Google Earth Engine for creating an animation of changes in annual vegetation over the central U.S. Great Plains.</p>
-<div class="cell" data-execution_count="43">
+<div class="cell" data-execution_count="71">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import and initialize GEE</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticated</span></span>
@@ -307,8 +309,8 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="animation-in-the-cloud" class="level2">
-<h2 class="anchored" data-anchor-id="animation-in-the-cloud">Animation in the cloud</h2>
+<section id="example-1-animation-of-vegetation-dynamics-in-the-cloud" class="level2">
+<h2 class="anchored" data-anchor-id="example-1-animation-of-vegetation-dynamics-in-the-cloud">Example 1: Animation of vegetation dynamics in the cloud</h2>
 <section id="define-animation-area" class="level4">
 <h4 class="anchored" data-anchor-id="define-animation-area">Define animation area</h4>
 <div class="cell" data-execution_count="3">
@@ -423,17 +425,17 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </div>
 </section>
 </section>
-<section id="animation-in-local-disk" class="level2">
-<h2 class="anchored" data-anchor-id="animation-in-local-disk">Animation in local disk</h2>
+<section id="example-2-animation-of-vegetation-dynamics-in-local-disk" class="level2">
+<h2 class="anchored" data-anchor-id="example-2-animation-of-vegetation-dynamics-in-local-disk">Example 2: Animation of vegetation dynamics in local disk</h2>
 <p>This option requires downloading the images to the local drive and creating the animation ourselves, but it provides with the greatest flexibilty to edit the resulting animation.</p>
-<div class="cell" data-execution_count="106">
+<div class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import additional modules</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.animation <span class="im">as</span> animation</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="104">
+<div class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define function to save images to the local drive </span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_geotiff(ee_image, filename, crs, scale, geom, bands<span class="op">=</span>[]):</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -450,17 +452,17 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        f.write(response.content)</span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">print</span>(<span class="ss">f"Saved image </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="100">
+<div class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select </span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> ee.FeatureCollection(<span class="st">"TIGER/2018/States"</span>).<span class="bu">filter</span>(ee.Filter.eq(<span class="st">'NAME'</span>, <span class="st">'Kansas'</span>))</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(region).mask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="125">
+<div class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the time range</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">'2012-01-01'</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> <span class="st">'2012-12-31'</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">'2022-01-01'</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> <span class="st">'2022-12-31'</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Select MODIS Terra Vegetation Indices 16-Day Global 1km</span></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>modis <span class="op">=</span> ee.ImageCollection(<span class="st">"MODIS/061/MOD13A2"</span>).filterDate(start_date, end_date)</span>
@@ -472,15 +474,15 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>dates <span class="op">=</span> collection.toList(collection.size()).<span class="bu">map</span>(get_date).getInfo()</span>
 <span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(dates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>['2012-01-01', '2012-01-17', '2012-02-02', '2012-02-18', '2012-03-05', '2012-03-21', '2012-04-06', '2012-04-22', '2012-05-08', '2012-05-24', '2012-06-09', '2012-06-25', '2012-07-11', '2012-07-27', '2012-08-12', '2012-08-28', '2012-09-13', '2012-09-29', '2012-10-15', '2012-10-31', '2012-11-16', '2012-12-02', '2012-12-18']</code></pre>
+<pre><code>['2022-01-01', '2022-01-17', '2022-02-02', '2022-02-18', '2022-03-06', '2022-03-22', '2022-04-07', '2022-04-23', '2022-05-09', '2022-05-25', '2022-06-10', '2022-06-26', '2022-07-12', '2022-07-28', '2022-08-13', '2022-08-29', '2022-09-14', '2022-09-30', '2022-10-16', '2022-11-01', '2022-11-17', '2022-12-03', '2022-12-19']</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="127">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gif_folder <span class="op">=</span> <span class="st">'../outputs/gif_files'</span></span>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gif_folder <span class="op">=</span> <span class="st">'../outputs/ndvi_gif_files'</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> glob.os.path.isdir(gif_folder):</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    glob.os.mkdir(gif_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="145">
+<div class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> date <span class="kw">in</span> dates:</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    start_date <span class="op">=</span> date</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    end_date <span class="op">=</span> (datetime.strptime(start_date, <span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>) <span class="op">+</span> timedelta(days<span class="op">=</span><span class="dv">1</span>)).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span>
@@ -488,31 +490,34 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    ndvi_img <span class="op">=</span> ndvi_img.multiply(<span class="fl">0.0001</span>).clip(region).mask(mask)</span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>gif_folder<span class="sc">}</span><span class="ss">/ndvi_</span><span class="sc">{</span>date<span class="sc">}</span><span class="ss">.tiff"</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    save_geotiff(ndvi_img, filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">1000</span>, geom<span class="op">=</span>region.geometry(), bands<span class="op">=</span>[<span class="st">'NDVI'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        save_geotiff(ndvi_img, filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">1000</span>, geom<span class="op">=</span>region.geometry(), bands<span class="op">=</span>[<span class="st">'NDVI'</span>])</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>:</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Trouble loading image </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">. Skipping this image."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Saved image ../outputs/gif_files/ndvi_2012-01-01.tiff
-Saved image ../outputs/gif_files/ndvi_2012-01-17.tiff
-Saved image ../outputs/gif_files/ndvi_2012-02-02.tiff
-Saved image ../outputs/gif_files/ndvi_2012-02-18.tiff
-Saved image ../outputs/gif_files/ndvi_2012-03-05.tiff
-Saved image ../outputs/gif_files/ndvi_2012-03-21.tiff
-Saved image ../outputs/gif_files/ndvi_2012-04-06.tiff
-Saved image ../outputs/gif_files/ndvi_2012-04-22.tiff
-Saved image ../outputs/gif_files/ndvi_2012-05-08.tiff
-Saved image ../outputs/gif_files/ndvi_2012-05-24.tiff
-Saved image ../outputs/gif_files/ndvi_2012-06-09.tiff
-Saved image ../outputs/gif_files/ndvi_2012-06-25.tiff
-Saved image ../outputs/gif_files/ndvi_2012-07-11.tiff
-Saved image ../outputs/gif_files/ndvi_2012-07-27.tiff
-Saved image ../outputs/gif_files/ndvi_2012-08-12.tiff
-Saved image ../outputs/gif_files/ndvi_2012-08-28.tiff
-Saved image ../outputs/gif_files/ndvi_2012-09-13.tiff
-Saved image ../outputs/gif_files/ndvi_2012-09-29.tiff
-Saved image ../outputs/gif_files/ndvi_2012-10-15.tiff
-Saved image ../outputs/gif_files/ndvi_2012-10-31.tiff
-Saved image ../outputs/gif_files/ndvi_2012-11-16.tiff
-Saved image ../outputs/gif_files/ndvi_2012-12-02.tiff
-Saved image ../outputs/gif_files/ndvi_2012-12-18.tiff</code></pre>
+<pre><code>Saved image ../outputs/ndvi_gif_files/ndvi_2022-01-01.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-01-17.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-02-02.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-02-18.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-03-06.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-03-22.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-04-07.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-04-23.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-05-09.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-05-25.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-06-10.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-06-26.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-07-12.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-07-28.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-08-13.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-08-29.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-09-14.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-09-30.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-10-16.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-11-01.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-11-17.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-12-03.tiff
+Saved image ../outputs/ndvi_gif_files/ndvi_2022-12-19.tiff</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -528,12 +533,12 @@ Note
 <p>In the method <code>.filterDate(start_date, end_date)</code> the start date is inclusive, but the end date is exclusive.</p>
 </div>
 </div>
-<div class="cell" data-execution_count="146">
+<div class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the list of images</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> glob.glob(<span class="ss">f"</span><span class="sc">{</span>gif_folder<span class="sc">}</span><span class="ss">/*.tiff"</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>images.sort()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="157">
+<div class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Paletter of colors for the Enhanced Vegetation Index</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>hex_palette <span class="op">=</span> [<span class="st">'#FF69B4'</span>,<span class="st">'#CE7E45'</span>, <span class="st">'#DF923D'</span>, <span class="st">'#F1B555'</span>, <span class="st">'#FCD163'</span>, <span class="st">'#99B718'</span>, <span class="st">'#74A901'</span>,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">'#66A000'</span>, <span class="st">'#529400'</span>, <span class="st">'#3E8601'</span>, <span class="st">'#207401'</span>, <span class="st">'#056201'</span>, <span class="st">'#004C00'</span>, <span class="st">'#023B01'</span>,</span>
@@ -555,42 +560,44 @@ Colormap note
 <p>The first color of the palette is hot pink (‘#FF69B4’). The color was added to represent the lowest NDVI values, which are typically caused by snow on the ground during winter months.</p>
 </div>
 </div>
-<div class="cell" data-execution_count="159">
+<div class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">3</span>))</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Leave a bit more room at the bottom to avoid cutting the xlabel</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>fig.subplots_adjust(bottom<span class="op">=</span><span class="fl">0.15</span>)</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure with axes and colorbar, which will remain fixed.</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">True</span>, </span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'NDVI'</span>},vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="fl">0.8</span>)</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> animate(index):</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Function that creates each frame.</span></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read geotiff image with xarray</span></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    raster <span class="op">=</span> xr.open_dataarray(images[index]).squeeze()</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clear axes and draw new objects (without colorbar)</span></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Force vmin and vmax to keep the same range of values as the colorbar</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    ax.clear()</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">False</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="fl">0.8</span>)</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    ax.set_title(images[index][<span class="op">-</span><span class="dv">15</span>:<span class="op">-</span><span class="dv">5</span>])</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Longitude'</span>)</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Latitude'</span>)</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure with axes and colorbar, which will remain fixed.</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>raster <span class="op">=</span> xr.open_dataarray(images[<span class="dv">0</span>]).squeeze()</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'NDVI'</span>},vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> animate(index):</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Function that creates each frame.</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read geotiff image with xarray</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    raster <span class="op">=</span> xr.open_dataarray(images[index]).squeeze()</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clear axes and draw new objects (without colorbar)</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Force vmin and vmax to keep the same range of values as the colorbar</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    ax.clear()</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">False</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    ax.set_title(images[index][<span class="op">-</span><span class="dv">15</span>:<span class="op">-</span><span class="dv">5</span>])</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
 <span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Avoid displaying the first figure</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Save animation as .gif</span></span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animation.FuncAnimation(fig, animate, <span class="bu">len</span>(images),interval<span class="op">=</span><span class="dv">500</span>)</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>ani.save(<span class="st">'../outputs/ndvi_animation.gif'</span>, writer<span class="op">=</span><span class="st">'pillow'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Avoid displaying the first figure</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Save animation as .gif</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animation.FuncAnimation(fig, animate, <span class="bu">len</span>(images),interval<span class="op">=</span><span class="dv">250</span>)</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>ani.save(<span class="st">'../outputs/ndvi_animation.gif'</span>, writer<span class="op">=</span><span class="st">'pillow'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
 </div>
@@ -598,6 +605,143 @@ Colormap note
 <p>Here is the resulting gif. Note that during the winter the image occasionally shows some areas with snow on the ground (look for reddish patches). You can display it in your notebook using the following html code:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;img</span> <span class="er">src</span><span class="ot">=</span><span class="st">"../outputs/ndvi_animation.gif"</span> <span class="er">alt</span><span class="ot">=</span><span class="st">"drawing"</span> <span class="er">width</span><span class="ot">=</span><span class="st">"650"</span><span class="kw">/&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><img src="../outputs/ndvi_animation.gif" alt="drawing" width="650"></p>
+</section>
+<section id="example-3-soil-moisture-dynamics" class="level2">
+<h2 class="anchored" data-anchor-id="example-3-soil-moisture-dynamics">Example 3: Soil moisture dynamics</h2>
+<div class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Since the product is available every 3 hours, define one month only</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to avoid running hitting the GEE memory limit</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> <span class="st">'2023-01-01'</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> <span class="st">'2023-01-31'</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Select SMAP Level 3 layer at 9-km spatial resolution</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>smap <span class="op">=</span> ee.ImageCollection(<span class="st">'NASA/SMAP/SPL4SMGP/007'</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the list of available image dates</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>get_date <span class="op">=</span> <span class="kw">lambda</span> image: ee.Image(image).date().<span class="bu">format</span>(<span class="st">'YYYY-MM-dd HH:mm:SS'</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>collection <span class="op">=</span> smap.filterDate(start_date, end_date)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>dates <span class="op">=</span> collection.toList(collection.size()).<span class="bu">map</span>(get_date).getInfo()</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(dates))</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(dates[<span class="dv">0</span>:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>240
+['2023-01-01 01:30:00', '2023-01-01 04:30:00', '2023-01-01 07:30:00', '2023-01-01 10:30:00', '2023-01-01 13:30:00', '2023-01-01 16:30:00', '2023-01-01 19:30:00', '2023-01-01 22:30:00', '2023-01-02 01:30:00', '2023-01-02 04:30:00']</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>smap_gif_folder <span class="op">=</span> <span class="st">'../outputs/smap_gif_files'</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> glob.os.path.isdir(smap_gif_folder):</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    glob.os.mkdir(smap_gif_folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use pandas to create range of dates</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>dates <span class="op">=</span> pd.date_range(<span class="st">'2023-01-01'</span>, <span class="st">'2023-12-31'</span>, freq<span class="op">=</span><span class="st">'7D'</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>dates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="80">
+<pre><code>DatetimeIndex(['2023-01-01', '2023-01-08', '2023-01-15', '2023-01-22',
+               '2023-01-29', '2023-02-05', '2023-02-12', '2023-02-19',
+               '2023-02-26', '2023-03-05', '2023-03-12', '2023-03-19',
+               '2023-03-26', '2023-04-02', '2023-04-09', '2023-04-16',
+               '2023-04-23', '2023-04-30', '2023-05-07', '2023-05-14',
+               '2023-05-21', '2023-05-28', '2023-06-04', '2023-06-11',
+               '2023-06-18', '2023-06-25', '2023-07-02', '2023-07-09',
+               '2023-07-16', '2023-07-23', '2023-07-30', '2023-08-06',
+               '2023-08-13', '2023-08-20', '2023-08-27', '2023-09-03',
+               '2023-09-10', '2023-09-17', '2023-09-24', '2023-10-01',
+               '2023-10-08', '2023-10-15', '2023-10-22', '2023-10-29',
+               '2023-11-05', '2023-11-12', '2023-11-19', '2023-11-26',
+               '2023-12-03', '2023-12-10', '2023-12-17', '2023-12-24',
+               '2023-12-31'],
+              dtype='datetime64[ns]', freq='7D')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Only use weekly moisture levels to avoid retrieving tons of images</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> date <span class="kw">in</span> dates:</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    start_date <span class="op">=</span> date.strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    end_date <span class="op">=</span> (date <span class="op">+</span> pd.Timedelta(<span class="st">'1D'</span>)).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Request data and create average of all images for that day</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    smap_img <span class="op">=</span> smap.filterDate(start_date, end_date) <span class="op">\</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>                   .<span class="bu">reduce</span>(ee.Reducer.mean()).multiply(<span class="dv">100</span>).clip(region).mask(mask)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Creaoutput file name</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>        filename <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>smap_gif_folder<span class="sc">}</span><span class="ss">/smap_</span><span class="sc">{</span>start_date<span class="sc">}</span><span class="ss">.tiff"</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Note that the band name has `mean` appended since that is the reducer we used</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># I also donwscaled the map to 1 km resolution from 9 km</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>        save_geotiff(smap_img, filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">9000</span>, </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>                     geom<span class="op">=</span>region.geometry(), bands<span class="op">=</span>[<span class="st">'sm_profile_mean'</span>])</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>:</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Trouble loading image </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">. Skipping this image."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the method <code>.filterDate(start_date, end_date)</code> the start date is inclusive, but the end date is exclusive.</p>
+</div>
+</div>
+<div class="cell" data-execution_count="106">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the list of images</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> glob.glob(<span class="ss">f"</span><span class="sc">{</span>smap_gif_folder<span class="sc">}</span><span class="ss">/*.tiff"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>images.sort()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="107">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define colormap</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> <span class="st">'Spectral'</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">3</span>))</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Leave a bit more room at the bottom to avoid cutting the xlabel</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>fig.subplots_adjust(bottom<span class="op">=</span><span class="fl">0.15</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure with axes and colorbar, which will remain fixed.</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>raster <span class="op">=</span> xr.open_dataarray(images[<span class="dv">0</span>]).squeeze()</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'VWC (%)'</span>}, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">40</span>)</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> animate(index):</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co">    Function that creates each frame.</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read geotiff image with xarray</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    raster <span class="op">=</span> xr.open_dataarray(images[index]).squeeze()</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clear axes and draw new objects (without colorbar)</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Force vmin and vmax to keep the same range of values as the colorbar</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>    ax.clear()</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>    raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, add_colorbar<span class="op">=</span><span class="va">False</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">40</span>)</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>    ax.set_title(images[index][<span class="op">-</span><span class="dv">15</span>:<span class="op">-</span><span class="dv">5</span>])</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Avoid displaying the first figure</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>plt.close()</span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Save animation as .gif</span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>ani <span class="op">=</span> animation.FuncAnimation(fig, animate, <span class="bu">len</span>(images), interval<span class="op">=</span><span class="dv">250</span>)</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>ani.save(<span class="st">'../outputs/smap_animation.gif'</span>, writer<span class="op">=</span><span class="st">'pillow'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
+</div>
+</div>
+<p><img src="../outputs/smap_animation.gif" alt="drawing" width="650"></p>
 
 
 </section>
