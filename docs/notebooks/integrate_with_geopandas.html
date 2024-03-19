@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Andres Patrignani">
+<meta name="dcterms.date" content="2024-02-16">
+<meta name="keywords" content="geopandas, gee, habitat fragmentation">
+
+<title>Harvest Data with Python and GEE - 11&nbsp; Integrate with GeoPandas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../notebooks/unsupervised_classification.html" rel="next">
+<link href="../notebooks/animate_image_collection.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/integrate_with_geopandas.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrate with GeoPandas</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Harvest Data with Python and GEE</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/soilwater/harvestearthdatawithpython" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Harvest-Data-with-Python-and-GEE.pdf" rel="" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/colormaps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Colormaps</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/value_at_a_point.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Value at a point</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/value_at_multiple_points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Value for multiple points</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/time_series_at_a_point.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Time series at a point</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/static_image_for_an_area.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Image for an area</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/reduce_image_collection_to_image.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Reduced image collection to image</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/reduce_image_collection_to_timeseries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Reduce a image collection to time series</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/band_computations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Band computations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/animate_image_collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Animate image collection</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/integrate_with_geopandas.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrate with GeoPandas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/unsupervised_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Unsupervised classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/supervised_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Supervised classification</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/export_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Export data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/interactive_maps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Interactive maps</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#habitat-fragmentation-problem" id="toc-habitat-fragmentation-problem" class="nav-link active" data-scroll-target="#habitat-fragmentation-problem">Habitat fragmentation problem</a></li>
+  <li><a href="#load-boundary-of-flint-hills-ecological-region" id="toc-load-boundary-of-flint-hills-ecological-region" class="nav-link" data-scroll-target="#load-boundary-of-flint-hills-ecological-region">Load boundary of Flint Hills ecological region</a></li>
+  <li><a href="#load-primary-and-secondary-roads" id="toc-load-primary-and-secondary-roads" class="nav-link" data-scroll-target="#load-primary-and-secondary-roads">Load primary and secondary roads</a></li>
+  <li><a href="#unify-roads-into-single-multiline-feature" id="toc-unify-roads-into-single-multiline-feature" class="nav-link" data-scroll-target="#unify-roads-into-single-multiline-feature">Unify roads into single Multiline feature</a></li>
+  <li><a href="#create-buffer-area-around-roads" id="toc-create-buffer-area-around-roads" class="nav-link" data-scroll-target="#create-buffer-area-around-roads">Create buffer area around roads</a></li>
+  <li><a href="#obtained-fragmented-areas" id="toc-obtained-fragmented-areas" class="nav-link" data-scroll-target="#obtained-fragmented-areas">Obtained fragmented areas</a></li>
+  <li><a href="#load-cropland-datalayer" id="toc-load-cropland-datalayer" class="nav-link" data-scroll-target="#load-cropland-datalayer">Load cropland datalayer</a></li>
+  <li><a href="#define-custom-colormap" id="toc-define-custom-colormap" class="nav-link" data-scroll-target="#define-custom-colormap">Define custom colormap</a></li>
+  <li><a href="#clip-and-save-cropland-map-for-each-polygon" id="toc-clip-and-save-cropland-map-for-each-polygon" class="nav-link" data-scroll-target="#clip-and-save-cropland-map-for-each-polygon">Clip and save cropland map for each polygon</a></li>
+  <li><a href="#clip-all-fragmentated-areas-to-cropland-data-layer" id="toc-clip-all-fragmentated-areas-to-cropland-data-layer" class="nav-link" data-scroll-target="#clip-all-fragmentated-areas-to-cropland-data-layer">Clip all fragmentated areas to cropland data layer</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/soilwater/harvestearthdatawithpython/blob/main/notebooks/integrate_with_geopandas.ipynb" class="toc-action">Edit this page</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Integrate with GeoPandas</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Andres Patrignani </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 16, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Combining remote sensing data from Google Earth Engine (GEE) with the spatial data processing capabilities of GeoPandas opens up a new avenue for advanced geographic analyses. GEE provides access to a comprehensive archive of satellite imagery and geospatial datasets, while GeoPandas extends the popular pandas library to allow for efficient operations of vector data. By leveraging the strengths of both platforms, researchers can perform sophisticated spatial operations, from overlay analyses to spatial joins, enhancing the possibilities of geospatial analysis and depth of research questions. To illustrate the integration of GEE with GeoPandas, we will study the extend of major habitat fragmentation.</p>
+<section id="habitat-fragmentation-problem" class="level2">
+<h2 class="anchored" data-anchor-id="habitat-fragmentation-problem">Habitat fragmentation problem</h2>
+<p>The Flint Hills is a region is one of the last remaining tallgrass prairies in North America. This unique ecosystem is home to a rich biodiversity, including numerous grassland bird species, diverse plant life, and a variety of other wildlife. The Flint Hills have resisted the plow thanks to their rocky terrain, preserving an expanse of native grasslands that once covered much of the Great Plains. This area not only offers a glimpse into America’s natural heritage but also serves as a critical refuge for species that thrive in the prairie habitat.</p>
+<p>Habitat fragmentation is a process where large continuous habitats are divided into smaller, isolated sections. Habitat fragmentation is a significant ecological concern, particularly in regions like the Flint Hills. Roads, one of the primary drivers of such fragmentation, can disrupt the interconnected landscapes, limiting animal movement, altering animal behavior, and increasing vulnerability to external threats like invasive species and climate change. In the Flint Hills, the expansion of road networks could potentially threaten the integrity of this pristine habitat.</p>
+<p>In this exercise we explore some of the fragmentation caused by primary and secondary roads.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> ListedColormap, BoundaryNorm</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate GEE</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ee.Authenticate()</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize GEE</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define CRS</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>utm14 <span class="op">=</span> <span class="dv">32614</span> <span class="co"># UTM 14 projected coordinates in meters (good for Kansas)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>wgs84 <span class="op">=</span> <span class="dv">4326</span> <span class="co"># WGS84 geographic coordinates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-boundary-of-flint-hills-ecological-region" class="level2">
+<h2 class="anchored" data-anchor-id="load-boundary-of-flint-hills-ecological-region">Load boundary of Flint Hills ecological region</h2>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load eco regions</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>eco_regions <span class="op">=</span> ee.FeatureCollection(<span class="st">"RESOLVE/ECOREGIONS/2017"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use this line to inspect properties</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#eco_regions.first().propertyNames().getInfo()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select flint hills region</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Find ecoregion ID using their website: https://ecoregions.appspot.com</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> eco_regions.<span class="bu">filter</span>(ee.Filter.inList(<span class="st">'ECO_ID'</span>,[<span class="dv">392</span>]))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>region_data <span class="op">=</span> region.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to GeoDataframe</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>gdf_region <span class="op">=</span> gpd.GeoDataFrame.from_features(region_data[<span class="st">'features'</span>], crs<span class="op">=</span>wgs84)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gdf_region[<span class="st">'geometry'</span>] <span class="op">=</span> gdf_region[<span class="st">'geometry'</span>].simplify(<span class="fl">0.001</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>gdf_region.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">geometry</th>
+<th data-quarto-table-cell-role="th">BIOME_NAME</th>
+<th data-quarto-table-cell-role="th">BIOME_NUM</th>
+<th data-quarto-table-cell-role="th">COLOR</th>
+<th data-quarto-table-cell-role="th">COLOR_BIO</th>
+<th data-quarto-table-cell-role="th">COLOR_NNH</th>
+<th data-quarto-table-cell-role="th">ECO_BIOME_</th>
+<th data-quarto-table-cell-role="th">ECO_ID</th>
+<th data-quarto-table-cell-role="th">ECO_NAME</th>
+<th data-quarto-table-cell-role="th">LICENSE</th>
+<th data-quarto-table-cell-role="th">NNH</th>
+<th data-quarto-table-cell-role="th">NNH_NAME</th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">REALM</th>
+<th data-quarto-table-cell-role="th">SHAPE_AREA</th>
+<th data-quarto-table-cell-role="th">SHAPE_LENG</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>POLYGON ((-97.36772 38.37556, -97.36465 38.359...</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="load-primary-and-secondary-roads" class="level2">
+<h2 class="anchored" data-anchor-id="load-primary-and-secondary-roads">Load primary and secondary roads</h2>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load TIGER roads dataset</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>roads_dataset <span class="op">=</span> ee.FeatureCollection(<span class="st">'TIGER/2016/Roads'</span>).filterBounds(region)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>selected_roads <span class="op">=</span> roads_dataset.<span class="bu">filter</span>(ee.Filter.inList(<span class="st">'mtfcc'</span>,[<span class="st">'S1100'</span>,<span class="st">'S1200'</span>]))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>roads_data <span class="op">=</span> selected_roads.getInfo()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Use this line to see available properties</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www2.census.gov/geo/pdfs/reference/mtfccs2017.pdf</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># roads_dataset.first().propertyNames().getInfo()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Geodataframe</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>gdf_roads <span class="op">=</span> gpd.GeoDataFrame.from_features(roads_data[<span class="st">'features'</span>], crs<span class="op">=</span>wgs84)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>gdf_roads.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">geometry</th>
+<th data-quarto-table-cell-role="th">fullname</th>
+<th data-quarto-table-cell-role="th">linearid</th>
+<th data-quarto-table-cell-role="th">mtfcc</th>
+<th data-quarto-table-cell-role="th">rttyp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>LINESTRING (-96.64559 39.84213, -96.64558 39.8...</td>
+<td>US Hwy 77</td>
+<td>1103942688564</td>
+<td>S1200</td>
+<td>U</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>LINESTRING (-96.66120 36.78194, -96.66182 36.7...</td>
+<td>1st St</td>
+<td>110788715400</td>
+<td>S1200</td>
+<td>M</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>LINESTRING (-96.65110 36.94044, -96.65108 36.9...</td>
+<td>Hwy 18</td>
+<td>1103942486000</td>
+<td>S1200</td>
+<td>M</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>LINESTRING (-96.65181 36.93269, -96.65178 36.9...</td>
+<td>Broadway</td>
+<td>110788721819</td>
+<td>S1200</td>
+<td>M</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LINESTRING (-96.65110 36.94044, -96.65108 36.9...</td>
+<td>Broadway</td>
+<td>1103942485999</td>
+<td>S1200</td>
+<td>M</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show map</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">6</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>gdf_region.plot(ax<span class="op">=</span>ax, facecolor<span class="op">=</span><span class="st">'None'</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>gdf_roads.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'tomato'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="unify-roads-into-single-multiline-feature" class="level2">
+<h2 class="anchored" data-anchor-id="unify-roads-into-single-multiline-feature">Unify roads into single Multiline feature</h2>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>unified_roads <span class="op">=</span> gdf_roads.unary_union</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gdf_unified_roads <span class="op">=</span> gpd.GeoDataFrame(geometry<span class="op">=</span>[unified_roads], crs<span class="op">=</span>gdf_roads.crs)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>gdf_unified_roads[<span class="st">'geometry'</span>] <span class="op">=</span> gdf_unified_roads[<span class="st">'geometry'</span>].simplify(<span class="fl">0.001</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>gdf_unified_roads.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>MULTILINESTRING ((-96.64559 39.84213, -96.6435...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="create-buffer-area-around-roads" class="level2">
+<h2 class="anchored" data-anchor-id="create-buffer-area-around-roads">Create buffer area around roads</h2>
+<p>This step is needed to be able to compute intersection and difference with the boundary map. We will assign a buffer of 1 km on each side of each road to create clearly distinct polygons. If you work in smaller areas, a smaller buffer would be better. In this dataset, a couple of kilometers represents a small magnitude compared to the extent of the region.</p>
+<div class="cell" data-execution_count="246">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create buffer as a GeoSeries</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>buffer_distance <span class="op">=</span> <span class="dv">1000</span>  <span class="co"># Example buffer distance</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>buffered_unified_roads <span class="op">=</span> gdf_unified_roads.to_crs(utm14).<span class="bu">buffer</span>(buffer_distance).to_crs(gdf_roads.crs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="247">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new GeoDataFrame with the buffered unified roads geometry</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>gdf_buffered_unified_roads <span class="op">=</span> gpd.GeoDataFrame(geometry<span class="op">=</span>gpd.GeoSeries(buffered_unified_roads),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                              crs<span class="op">=</span>gdf_roads.crs)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>gdf_buffered_unified_roads.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="247">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>MULTIPOLYGON (((-97.36906 38.91970, -97.37023 ...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="obtained-fragmented-areas" class="level2">
+<h2 class="anchored" data-anchor-id="obtained-fragmented-areas">Obtained fragmented areas</h2>
+<p>The key operation in this step is to compute the `difference between layers.</p>
+<div class="cell" data-execution_count="248">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtained fragmented areas</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fragmented_regions <span class="op">=</span> gpd.overlay(gdf_region, gdf_buffered_unified_roads, how<span class="op">=</span><span class="st">'difference'</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>fragmented_regions.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="248">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">geometry</th>
+<th data-quarto-table-cell-role="th">BIOME_NAME</th>
+<th data-quarto-table-cell-role="th">BIOME_NUM</th>
+<th data-quarto-table-cell-role="th">COLOR</th>
+<th data-quarto-table-cell-role="th">COLOR_BIO</th>
+<th data-quarto-table-cell-role="th">COLOR_NNH</th>
+<th data-quarto-table-cell-role="th">ECO_BIOME_</th>
+<th data-quarto-table-cell-role="th">ECO_ID</th>
+<th data-quarto-table-cell-role="th">ECO_NAME</th>
+<th data-quarto-table-cell-role="th">LICENSE</th>
+<th data-quarto-table-cell-role="th">NNH</th>
+<th data-quarto-table-cell-role="th">NNH_NAME</th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">REALM</th>
+<th data-quarto-table-cell-role="th">SHAPE_AREA</th>
+<th data-quarto-table-cell-role="th">SHAPE_LENG</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>MULTIPOLYGON (((-95.99115 39.43608, -95.91121 ...</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="249">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Explode the multipolygon feature</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gdf_patches <span class="op">=</span> fragmented_regions.explode(index_parts<span class="op">=</span><span class="va">True</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>gdf_patches.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="249">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">BIOME_NAME</th>
+<th data-quarto-table-cell-role="th">BIOME_NUM</th>
+<th data-quarto-table-cell-role="th">COLOR</th>
+<th data-quarto-table-cell-role="th">COLOR_BIO</th>
+<th data-quarto-table-cell-role="th">COLOR_NNH</th>
+<th data-quarto-table-cell-role="th">ECO_BIOME_</th>
+<th data-quarto-table-cell-role="th">ECO_ID</th>
+<th data-quarto-table-cell-role="th">ECO_NAME</th>
+<th data-quarto-table-cell-role="th">LICENSE</th>
+<th data-quarto-table-cell-role="th">NNH</th>
+<th data-quarto-table-cell-role="th">NNH_NAME</th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">REALM</th>
+<th data-quarto-table-cell-role="th">SHAPE_AREA</th>
+<th data-quarto-table-cell-role="th">SHAPE_LENG</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-95.99115 39.43608, -95.91121 39.396...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-96.06161 38.08792, -96.05381 38.080...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-95.87537 37.82449, -95.88215 37.819...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-95.90649 38.95669, -95.90651 38.942...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-95.94060 39.01776, -95.93234 39.001...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="251">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute area and find patch with largest area</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>gdf_patches[<span class="st">'area'</span>] <span class="op">=</span> gdf_patches.to_crs(utm14).area</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>idx_largest_area <span class="op">=</span> gdf_patches[<span class="st">'area'</span>].argmax()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="252">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot fragmented areas</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>gdf_patches.plot(ax<span class="op">=</span>ax, alpha<span class="op">=</span><span class="fl">0.75</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>, cmap<span class="op">=</span><span class="st">'tab20'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>gdf_patches.loc[[idx_largest_area],<span class="st">'geometry'</span>].plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'red'</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="integrate_with_geopandas_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="load-cropland-datalayer" class="level2">
+<h2 class="anchored" data-anchor-id="load-cropland-datalayer">Load cropland datalayer</h2>
+<p>This layer will help us understand which polygons are dominated by cropland and which polygons are still dominated by grassland vegetation</p>
+<div class="cell" data-execution_count="254">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Land use</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cdl <span class="op">=</span> ee.ImageCollection(<span class="st">'USDA/NASS/CDL'</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>cdl_layer <span class="op">=</span> cdl.<span class="bu">filter</span>(ee.Filter.date(<span class="st">'2020-01-01'</span>, <span class="st">'2021-12-31'</span>)).first().clip(region)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>cropland <span class="op">=</span> cdl_layer.select(<span class="st">'cropland'</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Single-band GeoTIFF files wrapped in a zip file.</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> cropland.getDownloadUrl({</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'region'</span>: region.geometry(),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'scale'</span>:<span class="dv">100</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'format'</span>: <span class="st">'GEO_TIFF'</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data using URL and save data as a new GeoTiff file</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'../datasets/spatial/cropland.tif'</span>, <span class="st">'wb'</span>) <span class="im">as</span> f:</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    f.write(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="255">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read GeoTiff file using the Xarray package</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>raster <span class="op">=</span> xr.open_dataarray(<span class="st">'../datasets/spatial/cropland.tif'</span>).squeeze()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>raster <span class="op">=</span> raster.rio.reproject(wgs84)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="258">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine raster file</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>raster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="258">
+
+<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewbox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewbox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
+  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
+  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
+  --xr-border-color: var(--jp-border-color2, #e0e0e0);
+  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
+  --xr-background-color: var(--jp-layout-color0, white);
+  --xr-background-color-row-even: var(--jp-layout-color1, white);
+  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
+}
+
+html[theme=dark],
+body[data-theme=dark],
+body.vscode-dark {
+  --xr-font-color0: rgba(255, 255, 255, 1);
+  --xr-font-color2: rgba(255, 255, 255, 0.54);
+  --xr-font-color3: rgba(255, 255, 255, 0.38);
+  --xr-border-color: #1F1F1F;
+  --xr-disabled-color: #515151;
+  --xr-background-color: #111111;
+  --xr-background-color-row-even: #111111;
+  --xr-background-color-row-odd: #313131;
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 20px 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: none;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: '►';
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: '▼';
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: '(';
+}
+
+.xr-dim-list:after {
+  content: ')';
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ',';
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  margin-bottom: 0;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  background-color: var(--xr-background-color) !important;
+  padding-bottom: 5px !important;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+</style><pre class="xr-text-repr-fallback">&lt;xarray.DataArray 'band_data' (y: 3560, x: 1658)&gt;
+array([[ nan,  nan,  nan, ...,  37.,  37., 176.],
+       [ nan,  nan,  nan, ..., 111., 111.,   5.],
+       [ nan,  nan,  nan, ...,  37.,  37.,   5.],
+       ...,
+       [ nan,  nan,  nan, ...,  nan,  nan,  nan],
+       [ nan,  nan,  nan, ...,  nan,  nan,  nan],
+       [ nan,  nan,  nan, ...,  nan,  nan,  nan]], dtype=float32)
+Coordinates:
+  * x            (x) float64 -97.39 -97.39 -97.39 ... -95.86 -95.86 -95.86
+  * y            (y) float64 39.72 39.72 39.72 39.72 ... 36.43 36.43 36.43 36.43
+    band         int64 1
+    spatial_ref  int64 0
+Attributes:
+    AREA_OR_POINT:           Area
+    TIFFTAG_RESOLUTIONUNIT:  1 (unitless)
+    TIFFTAG_XRESOLUTION:     1
+    TIFFTAG_YRESOLUTION:     1</pre><div class="xr-wrap" style="display:none"><div class="xr-header"><div class="xr-obj-type">xarray.DataArray</div><div class="xr-array-name">'band_data'</div><ul class="xr-dim-list"><li><span class="xr-has-index">y</span>: 3560</li><li><span class="xr-has-index">x</span>: 1658</li></ul></div><ul class="xr-sections"><li class="xr-section-item"><div class="xr-array-wrap"><input id="section-4908526c-46e8-4f97-bba0-16be2d5e93a2" class="xr-array-in" type="checkbox" checked=""><label for="section-4908526c-46e8-4f97-bba0-16be2d5e93a2" title="Show/hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-array-preview xr-preview"><span>nan nan nan nan nan nan nan nan ... nan nan nan nan nan nan nan nan</span></div><div class="xr-array-data"><pre>array([[ nan,  nan,  nan, ...,  37.,  37., 176.],
+       [ nan,  nan,  nan, ..., 111., 111.,   5.],
+       [ nan,  nan,  nan, ...,  37.,  37.,   5.],
+       ...,
+       [ nan,  nan,  nan, ...,  nan,  nan,  nan],
+       [ nan,  nan,  nan, ...,  nan,  nan,  nan],
+       [ nan,  nan,  nan, ...,  nan,  nan,  nan]], dtype=float32)</pre></div></div></li><li class="xr-section-item"><input id="section-006667bd-cbfc-4418-b4ef-5d4c6b812857" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-006667bd-cbfc-4418-b4ef-5d4c6b812857" class="xr-section-summary">Coordinates: <span>(4)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">x</span></div><div class="xr-var-dims">(x)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">-97.39 -97.39 ... -95.86 -95.86</div><input id="attrs-1d086520-493b-4e9a-ba8b-81efeb5e493f" class="xr-var-attrs-in" type="checkbox"><label for="attrs-1d086520-493b-4e9a-ba8b-81efeb5e493f" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-2393ed7a-02c1-416f-8179-a0ab3f61ed9d" class="xr-var-data-in" type="checkbox"><label for="data-2393ed7a-02c1-416f-8179-a0ab3f61ed9d" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>axis :</span></dt><dd>X</dd><dt><span>long_name :</span></dt><dd>longitude</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd></dl></div><div class="xr-var-data"><pre>array([-97.393146, -97.39222 , -97.391294, ..., -95.860828, -95.859902,
+       -95.858977])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span class="xr-has-index">y</span></div><div class="xr-var-dims">(y)</div><div class="xr-var-dtype">float64</div><div class="xr-var-preview xr-preview">39.72 39.72 39.72 ... 36.43 36.43</div><input id="attrs-fed49868-e378-47e9-9185-be7d78692e57" class="xr-var-attrs-in" type="checkbox"><label for="attrs-fed49868-e378-47e9-9185-be7d78692e57" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-77b8772c-a7c1-451e-8d13-779efc77ca8d" class="xr-var-data-in" type="checkbox"><label for="data-77b8772c-a7c1-451e-8d13-779efc77ca8d" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>axis :</span></dt><dd>Y</dd><dt><span>long_name :</span></dt><dd>latitude</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd></dl></div><div class="xr-var-data"><pre>array([39.722234, 39.721308, 39.720382, ..., 36.428908, 36.427982, 36.427057])</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>band</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">1</div><input id="attrs-95e9431d-e444-4fc2-8f52-8f01f8d3a01f" class="xr-var-attrs-in" type="checkbox" disabled=""><label for="attrs-95e9431d-e444-4fc2-8f52-8f01f8d3a01f" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-ae864658-e3e0-4d00-8a90-1720242470d3" class="xr-var-data-in" type="checkbox"><label for="data-ae864658-e3e0-4d00-8a90-1720242470d3" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"></dl></div><div class="xr-var-data"><pre>array(1)</pre></div></li><li class="xr-var-item"><div class="xr-var-name"><span>spatial_ref</span></div><div class="xr-var-dims">()</div><div class="xr-var-dtype">int64</div><div class="xr-var-preview xr-preview">0</div><input id="attrs-363efc29-e8de-4337-9f49-6d581c552023" class="xr-var-attrs-in" type="checkbox"><label for="attrs-363efc29-e8de-4337-9f49-6d581c552023" title="Show/Hide attributes"><svg class="icon xr-icon-file-text2"><use href="#icon-file-text2"></use></svg></label><input id="data-c0033948-3369-4b21-9eb3-5db713f142a4" class="xr-var-data-in" type="checkbox"><label for="data-c0033948-3369-4b21-9eb3-5db713f142a4" title="Show/Hide data repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-var-attrs"><dl class="xr-attrs"><dt><span>crs_wkt :</span></dt><dd>GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]</dd><dt><span>semi_major_axis :</span></dt><dd>6378137.0</dd><dt><span>semi_minor_axis :</span></dt><dd>6356752.314245179</dd><dt><span>inverse_flattening :</span></dt><dd>298.257223563</dd><dt><span>reference_ellipsoid_name :</span></dt><dd>WGS 84</dd><dt><span>longitude_of_prime_meridian :</span></dt><dd>0.0</dd><dt><span>prime_meridian_name :</span></dt><dd>Greenwich</dd><dt><span>geographic_crs_name :</span></dt><dd>WGS 84</dd><dt><span>horizontal_datum_name :</span></dt><dd>World Geodetic System 1984</dd><dt><span>grid_mapping_name :</span></dt><dd>latitude_longitude</dd><dt><span>spatial_ref :</span></dt><dd>GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]</dd><dt><span>GeoTransform :</span></dt><dd>-97.39360889264871 0.0009258717165099349 0.0 39.7226968847078 0.0 -0.0009258717165099349</dd></dl></div><div class="xr-var-data"><pre>array(0)</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-d648b3ff-786c-4a7f-8146-8e1894019f9d" class="xr-section-summary-in" type="checkbox"><label for="section-d648b3ff-786c-4a7f-8146-8e1894019f9d" class="xr-section-summary">Indexes: <span>(2)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><ul class="xr-var-list"><li class="xr-var-item"><div class="xr-index-name"><div>x</div></div><div class="xr-index-preview">PandasIndex</div><div></div><input id="index-26e40117-bc08-4c21-b95a-411fafb9aea8" class="xr-index-data-in" type="checkbox"><label for="index-26e40117-bc08-4c21-b95a-411fafb9aea8" title="Show/Hide index repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-index-data"><pre>PandasIndex(Index([-97.39314595679046, -97.39222008507396, -97.39129421335744,
+       -97.39036834164094, -97.38944246992442, -97.38851659820791,
+        -97.3875907264914, -97.38666485477489, -97.38573898305839,
+       -97.38481311134187,
+       ...
+       -95.86730936798209, -95.86638349626558, -95.86545762454907,
+       -95.86453175283256, -95.86360588111604, -95.86268000939954,
+       -95.86175413768304, -95.86082826596652, -95.85990239425001,
+        -95.8589765225335],
+      dtype='float64', name='x', length=1658))</pre></div></li><li class="xr-var-item"><div class="xr-index-name"><div>y</div></div><div class="xr-index-preview">PandasIndex</div><div></div><input id="index-360190b4-3108-48b8-a4c7-c0ae859144bf" class="xr-index-data-in" type="checkbox"><label for="index-360190b4-3108-48b8-a4c7-c0ae859144bf" title="Show/Hide index repr"><svg class="icon xr-icon-database"><use href="#icon-database"></use></svg></label><div class="xr-index-data"><pre>PandasIndex(Index([ 39.72223394884955,  39.72130807713304,  39.72038220541653,
+       39.719456333700016,  39.71853046198351,    39.717604590267,
+        39.71667871855049,  39.71575284683398,  39.71482697511747,
+        39.71390110340096,
+       ...
+        36.43538935523928,  36.43446348352277,  36.43353761180626,
+        36.43261174008975,  36.43168586837324,  36.43075999665673,
+        36.42983412494022,  36.42890825322371,   36.4279823815072,
+        36.42705650979069],
+      dtype='float64', name='y', length=3560))</pre></div></li></ul></div></li><li class="xr-section-item"><input id="section-120663b8-c4a6-4e98-a07a-fc6f901ead2d" class="xr-section-summary-in" type="checkbox" checked=""><label for="section-120663b8-c4a6-4e98-a07a-fc6f901ead2d" class="xr-section-summary">Attributes: <span>(4)</span></label><div class="xr-section-inline-details"></div><div class="xr-section-details"><dl class="xr-attrs"><dt><span>AREA_OR_POINT :</span></dt><dd>Area</dd><dt><span>TIFFTAG_RESOLUTIONUNIT :</span></dt><dd>1 (unitless)</dd><dt><span>TIFFTAG_XRESOLUTION :</span></dt><dd>1</dd><dt><span>TIFFTAG_YRESOLUTION :</span></dt><dd>1</dd></dl></div></li></ul></div></div>
+</div>
+</div>
+</section>
+<section id="define-custom-colormap" class="level2">
+<h2 class="anchored" data-anchor-id="define-custom-colormap">Define custom colormap</h2>
+<div class="cell" data-execution_count="279">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your labels and their corresponding colors</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>info <span class="op">=</span> cropland.getInfo()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>class_names <span class="op">=</span> info[<span class="st">'properties'</span>][<span class="st">'cropland_class_names'</span>]</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>class_values <span class="op">=</span> info[<span class="st">'properties'</span>][<span class="st">'cropland_class_values'</span>]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>class_colors <span class="op">=</span> info[<span class="st">'properties'</span>][<span class="st">'cropland_class_palette'</span>]</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>class_colors <span class="op">=</span> [<span class="st">'#'</span><span class="op">+</span>c <span class="cf">for</span> c <span class="kw">in</span> class_colors]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="280">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the colormap</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> ListedColormap(class_colors)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a norm with boundaries</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>norm <span class="op">=</span> BoundaryNorm(class_values, cmap.N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="clip-and-save-cropland-map-for-each-polygon" class="level2">
+<h2 class="anchored" data-anchor-id="clip-and-save-cropland-map-for-each-polygon">Clip and save cropland map for each polygon</h2>
+<p>In this step we are clipping the cropland datalayer for each polygon and then saving that clipped and masked image into the GeoDataframe.</p>
+<div class="cell" data-execution_count="281">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that the CRS are the same before clipping the layer</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>gdf_patches.crs <span class="op">==</span> raster.rio.crs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="281">
+<pre><code>True</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="282">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to clip the raster with each polygon and return a numpy array</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clip_raster(polygon, raster):</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clip the raster with the polygon</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    clipped <span class="op">=</span> raster.rio.clip([polygon.geometry], crs<span class="op">=</span>raster.rio.crs, all_touched<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> clipped</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to each row in the GeoDataFrame to create a new 'clipped_raster' column</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>gdf_patches[<span class="st">'clipped_raster'</span>] <span class="op">=</span> gdf_patches.<span class="bu">apply</span>(<span class="kw">lambda</span> row: clip_raster(row, raster), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect resulting GeoDataframe</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>gdf_patches.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="282">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">BIOME_NAME</th>
+<th data-quarto-table-cell-role="th">BIOME_NUM</th>
+<th data-quarto-table-cell-role="th">COLOR</th>
+<th data-quarto-table-cell-role="th">COLOR_BIO</th>
+<th data-quarto-table-cell-role="th">COLOR_NNH</th>
+<th data-quarto-table-cell-role="th">ECO_BIOME_</th>
+<th data-quarto-table-cell-role="th">ECO_ID</th>
+<th data-quarto-table-cell-role="th">ECO_NAME</th>
+<th data-quarto-table-cell-role="th">LICENSE</th>
+<th data-quarto-table-cell-role="th">NNH</th>
+<th data-quarto-table-cell-role="th">NNH_NAME</th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">REALM</th>
+<th data-quarto-table-cell-role="th">SHAPE_AREA</th>
+<th data-quarto-table-cell-role="th">SHAPE_LENG</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+<th data-quarto-table-cell-role="th">area</th>
+<th data-quarto-table-cell-role="th">clipped_raster</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-95.99115 39.43608, -95.91121 39.396...</td>
+<td>4.267920e+08</td>
+<td>[[&lt;xarray.DataArray 'band_data' ()&gt;\narray(143...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-96.06161 38.08792, -96.05381 38.080...</td>
+<td>5.749008e+08</td>
+<td>[[&lt;xarray.DataArray 'band_data' ()&gt;\narray(nan...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Temperate Grasslands, Savannas &amp; Shrublands</td>
+<td>8</td>
+<td>#A87001</td>
+<td>#FEFF73</td>
+<td>#EE1E23</td>
+<td>NE08</td>
+<td>392</td>
+<td>Flint Hills tallgrass prairie</td>
+<td>CC-BY 4.0</td>
+<td>4</td>
+<td>Nature Imperiled</td>
+<td>271</td>
+<td>Nearctic</td>
+<td>2.873636</td>
+<td>9.461116</td>
+<td>POLYGON ((-95.87537 37.82449, -95.88215 37.819...</td>
+<td>1.079830e+07</td>
+<td>[[&lt;xarray.DataArray 'band_data' ()&gt;\narray(nan...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="303">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure showing the cropland data layer for a selected polygon</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>gdf_patches.loc[[idx_largest_area],<span class="st">'geometry'</span>].boundary.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>gdf_patches.loc[idx_largest_area,<span class="st">'clipped_raster'</span>].plot(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                                                        norm<span class="op">=</span>norm, add_colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="integrate_with_geopandas_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="clip-all-fragmentated-areas-to-cropland-data-layer" class="level2">
+<h2 class="anchored" data-anchor-id="clip-all-fragmentated-areas-to-cropland-data-layer">Clip all fragmentated areas to cropland data layer</h2>
+<p>This process involves rasterizing each polygon to match the spatial resolution of the cropland data layer.</p>
+<div class="cell" data-execution_count="299">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the transformation and shape from the raster metadata</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> raster.rio.transform()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>shape <span class="op">=</span> (raster.rio.height, raster.rio.width)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Rasterize the polygons</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>rasterized_image <span class="op">=</span> rasterize(</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    [(geometry, <span class="dv">1</span>) <span class="cf">for</span> geometry <span class="kw">in</span> gdf_patches.geometry],</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    out_shape<span class="op">=</span>shape,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span><span class="dv">0</span>,  <span class="co"># Background value for raster cells not covered by polygons</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    transform<span class="op">=</span>transform,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    all_touched<span class="op">=</span><span class="va">True</span>  <span class="co"># Set to True if you want to include all pixels touched by geometries</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the rasterized image to an xarray DataArray</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>rasterized_da <span class="op">=</span> xr.DataArray(rasterized_image, dims<span class="op">=</span>(<span class="st">"y"</span>, <span class="st">"x"</span>), coords<span class="op">=</span>raster.coords)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlay the rasterized polygons on the raster by using the where method</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="co"># This will mask the raster outside the polygons</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>masked_raster <span class="op">=</span> raster.where(rasterized_da <span class="op">==</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="301">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure showing the cropland data layer for all polygons</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>masked_raster.plot(ax<span class="op">=</span>ax, cmap<span class="op">=</span>cmap, norm<span class="op">=</span>norm, add_colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>gdf_patches.boundary.plot(ax<span class="op">=</span>ax, edgecolor<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="integrate_with_geopandas_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../notebooks/animate_image_collection.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Animate image collection</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../notebooks/unsupervised_classification.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Unsupervised classification</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

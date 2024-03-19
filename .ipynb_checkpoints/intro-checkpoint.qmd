@@ -1,0 +1,55 @@
+# Introduction
+
+In geospatial data analysis, data is represented in two primary forms: vector and raster. Both formats are used to capture, store, and visualize geographical information, but they do so in fundamentally different ways.
+
+## Basic concepts of geographic information systems
+
+**Vector Data:** represents geographic features as discrete points, lines, and polygons. This format is used to capture details with precise boundaries and locations. For example:
+
+- **Points** could represent locations such as weather stations, wells, or trees.
+- **Lines** might delineate features like rivers, roads, or railway tracks.
+- **Polygons** are used to define areas such as lakes, watersheds, or agricultural fields.
+
+Vector data is advantageous for mapping features that have clear boundaries and for tasks that require precise measurements (like distance, perimeter, or area).
+
+**Raster Data:**
+Raster data, on the other hand, is a grid of cells (or pixels), where each cell contains a value representing information, such as temperature, elevation, or land cover. The raster format is effective for representing continuous phenomena. Raster data is often used in:
+- Satellite imagery, where each pixel has spectral data values.
+- Digital elevation models (DEMs), where each pixel represents ground elevation.
+- Thematic maps, such as precipitation or land use maps, where each pixel's value corresponds to a specific category or quantity.
+
+Raster data is especially useful for analyzing spatial variations across a region and for modeling environmental and earth surface processes.
+
+
+## Google Earth building blocks
+
+Google Earth Engine (GEE) is a powerful platform for analyzing geospatial data at scale, providing a vast library of satellite imagery and geospatial datasets. The fundamental data structures of GEE are: geometries, features, feature collections, images, and image collections. Understanding these structures is key to effectively utilizing GEE for any geospatial data analysis task.
+
+### Geometries
+Geometries represent the simplest form of spatial data in GEE, describing points or shapes in geographic space. They can be points, lines, polygons, or even more complex shapes defining areas (e.g., a rectangle, a watershed, a county), routes, or specific locations on Earth's surface.
+
+### Features
+A Feature in GEE is a geometry with associated properties. These properties can be metadata or attributes related to the geometry, such as the name of a location, its population, a label, or any other characteristic. Features combine spatial and descriptive information, making them useful for detailed geospatial analyses.
+
+### Feature Collections
+A Feature Collection is a group of features aggregated into a single data structure. This collection can represent a series of points, such as weather stations, or complex combinations of polygons, such as administrative boundaries, each with their own set of attributes. Feature Collections are instrumental in managing and analyzing related sets of features.
+
+### Images
+An Image in GEE is a raster data structure, representing Earth data in grid format where each cell has a value. These images can depict various types of data, such as satellite imagery, temperature maps, elevation data, or derived indices (e.g., NDVI for vegetation analysis). An image may contain multiple bands, with each band representing a different dataset or time snapshot.
+
+### Image Collections
+An Image Collection is a series of images grouped together, typically representing the same area over time. This could be a sequence of satellite images capturing changes throughout the seasons or years, or a collection of derived datasets like monthly precipitation maps. Image Collections enable temporal analyses and change detection studies over large geographic areas.
+
+### Commonalities and Differences
+- **Spatial Representation**: Geometries and Features represent vector data, while Images represent raster data. Feature Collections aggregate vector data, and Image Collections aggregate raster data.
+- **Data Complexity**: Geometries are the simplest, defining only shapes. Features add descriptive data to geometries. Images and Image Collections introduce the complexity of raster data, allowing for detailed analysis over discrete units of space and time
+- **Analysis Capabilities**: Features and Feature Collections are ideal for analyses that require descriptive data alongside spatial data. Images and Image Collections are suited for pixel-based analyses and time-series studies.
+
+### Summary
+Let's summarize these concepts:
+
+- **Geometries**: Basic shapes (point, line, polygon).
+- **Features**: Shapes with associated properties (metadata) like names and unique identifiers.
+- **Feature Collections**: Aggregated features.
+- **Images**: Grid of values (raster), single band or multiple bands.
+- **Image Collections**: Series of related images over time.

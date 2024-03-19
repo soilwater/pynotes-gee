@@ -1,0 +1,47 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Harvest Data with Python and GEE"
+  author: "Andres Patrignani"
+  date: "3/18/2024"
+  date-format: "long"
+  cover-image: cover.jpg
+  repo-url: https://github.com/soilwater/harvestearthdatawithpython
+  repo-actions: [edit]
+  downloads: [pdf]
+  page-navigation: true
+  google-analytics: ""
+  
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - notebooks/colormaps.ipynb
+    - notebooks/value_at_a_point.ipynb
+    - notebooks/value_at_multiple_points.ipynb
+    - notebooks/time_series_at_a_point.ipynb
+    - notebooks/static_image_for_an_area.ipynb
+    - notebooks/reduce_image_collection_to_image.ipynb
+    - notebooks/reduce_image_collection_to_timeseries.ipynb
+    - notebooks/band_computations.ipynb
+    - notebooks/animate_image_collection.ipynb
+    - notebooks/integrate_with_geopandas.ipynb
+    - notebooks/unsupervised_classification.ipynb
+    - notebooks/supervised_classification.ipynb
+    - notebooks/export_data.ipynb
+    - notebooks/interactive_maps.ipynb
+
+
+format:
+  html:
+    theme: cosmo
+    number-sections: true
+    number-depth: 1
+    code-overflow: scroll
+    code-fold: false
+    html-math-method: katex
+    highlight-style: dracula
+    toc: true
+    
+  pdf: default
