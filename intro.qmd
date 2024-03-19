@@ -1,4 +1,4 @@
-# Introduction
+# Basic concepts
 
 In geospatial data analysis, data is represented in two primary forms: vector and raster. Both formats are used to capture, store, and visualize geographical information, but they do so in fundamentally different ways.
 
