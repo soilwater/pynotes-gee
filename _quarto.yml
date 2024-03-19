@@ -12,7 +12,7 @@ book:
   repo-actions: [edit]
   downloads: [pdf]
   page-navigation: true
-  google-analytics: ""
+  google-analytics: "G-H7B15Q02BW"
   
   chapters:
     - index.qmd
