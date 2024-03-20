@@ -8,6 +8,7 @@ book:
   date: "3/18/2024"
   date-format: "long"
   cover-image: cover.jpg
+  favicon: favicon.jpg
   repo-url: https://github.com/soilwater/pynotes-gee
   repo-actions: [edit]
   downloads: [pdf]
