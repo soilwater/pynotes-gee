@@ -40,6 +40,62 @@ An Image in GEE is a raster data structure, representing Earth data in grid form
 ### Image Collections
 An Image Collection is a series of images grouped together, typically representing the same area over time. This could be a sequence of satellite images capturing changes throughout the seasons or years, or a collection of derived datasets like monthly precipitation maps. Image Collections enable temporal analyses and change detection studies over large geographic areas.
 
+## GeoJSON
+
+GeoJSON is a light-weight and widely used open standard format designed for representing geographical features. It is based on JSON (JavaScript Object Notation), which is very much like a Python dictionary, making it easy to read and parse by both humans and machines. 
+
+A GeoJSON supports various geometric types such as Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon, and GeometryCollection. Each geometry can also contain properties in the form of key-value pairs, allowing for the addition non-spatial attributes associated with the geographic features.
+
+The following example is a Feature Collection showing the GeoJSON data obtained from GEE for two counties. The keys on the very left (`columns`, `features`, `id`, `properties`, `type`, and `version`) are keys of the Feature Collection. Note that the `features` key has a list of dictionaries as its value. These two dictinaries contain the information for each county. Since each county is a dictionary, then they also have key-value pairs, like `geometry`, `id`, `properties`, and `type`. This  information is repeated in each item. If you look further, you will notice that even the `geometry` key has another dictionary inside, which contains the `coordinates` and the `type` of the geometry.
+
+Certainly there are multiple levels and quite a bit of nesting, but the information has a clear, organized, and human-readable structure.
+
+The `.getInfo()` method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (`pprint`) module in Python to ensure the data is displayed clearly, like the example below. [This tutorial](https://soilwater.github.io/pynotes-gee/notebooks/value_at_a_point.html) will help you get started.
+
+```
+{'columns': {'ALAND': 'Long',
+             'AWATER': 'Long',
+             'COUNTYFP': 'String',
+             'NAME': 'String',
+             'STATEFP': 'String',
+             'system:index': 'String'},
+ 'features': [{'geometry': {'coordinates': [[[-100.9542311520017,36.57269908219634],
+                                             [-100.95409647655981,36.557977388454546],
+                                             [-100.95409647655981,36.557842673053706],
+                                             ...]],
+                            'type': 'Polygon'},
+               'id': '00000000000000000515',
+               'properties': {'ALAND': 4700042738,
+                              'AWATER': 7347161,
+                              'COUNTYFP': '007',
+                              'NAME': 'Beaver',
+                              'NAMELSAD': 'Beaver County',
+                              'STATEFP': '40'},
+               'type': 'Feature'},
+              {'geometry': {'coordinates': [[[-100.0038723945186,36.75510474601957],
+                                             [-100.00382751270251,36.75353381242449],
+                                             [-100.00382751270251,36.75223223032575],
+                                             ...]],
+                            'type': 'Polygon'},
+               'id': '00000000000000000957',
+               'properties': {'ALAND': 2691041230,
+                              'AWATER': 5259447,
+                              'COUNTYFP': '059',
+                              'NAME': 'Harper',
+                              'NAMELSAD': 'Harper County',
+                              'STATEFP': '40'},
+               'type': 'Feature'}],
+ 'id': 'TIGER/2016/Counties',
+ 'properties': {'date_range': [1451606400000, 1483315200000],
+                'description': 'The United States Census Bureau TIGER dataset '
+                               'contains the 2016 boundaries\n'
+                               'for primary legal divisions of US states...',
+                'period': 0,
+                'title': 'TIGER: US Census Counties 2016'},
+ 'type': 'FeatureCollection',
+ 'version': 1566851207937615}
+```
+
 ### Commonalities and Differences
 - **Spatial Representation**: Geometries and Features represent vector data, while Images represent raster data. Feature Collections aggregate vector data, and Image Collections aggregate raster data.
 - **Data Complexity**: Geometries are the simplest, defining only shapes. Features add descriptive data to geometries. Images and Image Collections introduce the complexity of raster data, allowing for detailed analysis over discrete units of space and time
