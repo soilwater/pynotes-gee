@@ -50,6 +50,16 @@ The following example is a Feature Collection showing the GeoJSON data obtained 
 
 Certainly there are multiple levels and quite a bit of nesting, but the information has a clear, organized, and human-readable structure.
 
+::: {.callout-tip}
+## Tip
+The secret to understand GeoJSON objects is to pay attention to:
+
+1) indentation,
+2) the opening `{` and closing `}` curly braces, 
+3) opening `[` and closing `]` square brackets, and 
+4) the commas `,` that separate individual structures.
+:::
+
 The `.getInfo()` method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (`pprint`) module in Python to ensure the data is displayed clearly, like the example below. [This tutorial](https://soilwater.github.io/pynotes-gee/notebooks/value_at_a_point.html) will help you get started.
 
 ```

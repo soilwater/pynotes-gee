@@ -298,6 +298,25 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <p>A GeoJSON supports various geometric types such as Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon, and GeometryCollection. Each geometry can also contain properties in the form of key-value pairs, allowing for the addition non-spatial attributes associated with the geographic features.</p>
 <p>The following example is a Feature Collection showing the GeoJSON data obtained from GEE for two counties. The keys on the very left (<code>columns</code>, <code>features</code>, <code>id</code>, <code>properties</code>, <code>type</code>, and <code>version</code>) are keys of the Feature Collection. Note that the <code>features</code> key has a list of dictionaries as its value. These two dictinaries contain the information for each county. Since each county is a dictionary, then they also have key-value pairs, like <code>geometry</code>, <code>id</code>, <code>properties</code>, and <code>type</code>. This information is repeated in each item. If you look further, you will notice that even the <code>geometry</code> key has another dictionary inside, which contains the <code>coordinates</code> and the <code>type</code> of the geometry.</p>
 <p>Certainly there are multiple levels and quite a bit of nesting, but the information has a clear, organized, and human-readable structure.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The secret to understand GeoJSON objects is to pay attention to:</p>
+<ol type="1">
+<li>indentation,</li>
+<li>the opening <code>{</code> and closing <code>}</code> curly braces,</li>
+<li>opening <code>[</code> and closing <code>]</code> square brackets, and</li>
+<li>the commas <code>,</code> that separate individual structures.</li>
+</ol>
+</div>
+</div>
 <p>The <code>.getInfo()</code> method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (<code>pprint</code>) module in Python to ensure the data is displayed clearly, like the example below. <a href="https://soilwater.github.io/pynotes-gee/notebooks/value_at_a_point.html">This tutorial</a> will help you get started.</p>
 <pre><code>{'columns': {'ALAND': 'Long',
              'AWATER': 'Long',
