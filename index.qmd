@@ -42,6 +42,17 @@ If you are in a Windows OS, follow [this installation guide](https://github.com/
 2. Open a new Jupyter notebook and import the Google Earth Engine module using `import ee`. We will do this at the beginning of each tutorial.
 3. **Authenticate with Earth Engine**: Run `ee.Authenticate()` and follow the instructions to authenticate your account.
 
+#### Other resources:
+
+[awesome-gee-community-catalog](https://gee-community-catalog.org): Community-driven catalog of GEE datasets.
+
+[geemap](https://geemap.org): This is an outstanding and comprehensive set of tutorials for those that want a ready-to-use, well-documented, and hassle-free module with tons of videos.
+
+[Leafmap](https://leafmap.org): A library built on `folium` for spatial analysis and interactive mapping int he notebook.
+
+[cartoee](https://geemap.org/cartoee/): Library for creating publication quality figures.
+
+
 
 
  

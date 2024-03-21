@@ -25,6 +25,7 @@ book:
     - notebooks/static_image_for_an_area.ipynb
     - notebooks/reduce_image_collection_to_image.ipynb
     - notebooks/reduce_image_collection_to_timeseries.ipynb
+    - notebooks/use_my_vector_file.ipynb
     - notebooks/band_computations.ipynb
     - notebooks/animate_image_collection.ipynb
     - notebooks/integrate_with_geopandas.ipynb
