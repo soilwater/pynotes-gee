@@ -220,7 +220,10 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#getting-started-with-google-earth-engine-gee" id="toc-getting-started-with-google-earth-engine-gee" class="nav-link" data-scroll-target="#getting-started-with-google-earth-engine-gee">Getting Started with Google Earth Engine (GEE)</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/soilwater/pynotes-gee/edit/main/index.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
@@ -263,8 +266,47 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <p>Google Earth Engine is an advanced cloud-based platform designed for petabyte-scale analysis of geospatial data, particularly satellite imagery. It provides a comprehensive set of tools for analyzing and visualizing data, facilitating the extraction of meaningful insights from the Earth’s surface over time. The powerful computing infrastructure behind GEE allows researchers to execute complex geospatial analyses that would be computationally intensive or infeasible on conventional laptops and desktop computers. Through its accessible interface, GEE enables automated processing pipelines using Python.</p>
 <p>Through a series of short, practical, and step-by-step tutorials in the form of Jupyter notebooks, this compendium provides a comprehensive toolkit describing common techniques for extracting, processing, and analyzing Earth data using Python libraries like Xarray, Numpy, Pandas, Matplotlib, GeoPandas. The content is aimed at learners that are familiar with the Python programming language, but are just getting started with Google Earth Engine.</p>
 <p>If you find any mistakes in the code or have suggestions for other tutorials, please create an issue in the <a href="https://github.com/soilwater/pynotes-gee/issues">Github repository</a></p>
+<section id="getting-started-with-google-earth-engine-gee" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started-with-google-earth-engine-gee">Getting Started with Google Earth Engine (GEE)</h2>
+<p>The Google Earth Engine platform can be used with two programming languages: Javascript and Python. This entire series of tutorials is based solely in the Python programming language.</p>
+<p>First and foremost, here are two relevant links to the Google Earth Engine official documentation:</p>
+<ul>
+<li><a href="https://earthengine.google.com/">Main Google Earth Engine website</a></li>
+<li><a href="https://developers.google.com/earth-engine/guides">Developer Guides</a></li>
+</ul>
+<section id="python-environemnt" class="level4">
+<h4 class="anchored" data-anchor-id="python-environemnt">Python environemnt</h4>
+<p>If you do not have Python installed in you machine, download the <a href="https://www.anaconda.com/download">Anaconda package</a>, which includes a ton of curated Python libraries for data science.</p>
+</section>
+<section id="other-required-packages" class="level4">
+<h4 class="anchored" data-anchor-id="other-required-packages">Other required packages</h4>
+<p>The tutorials were developed with the Anaconda package in mind, however, some tutorial make use of additional libraries. Use the command <code>pip install &lt;package_name&gt;</code> to add the following packages:</p>
+<ul>
+<li><strong>folium</strong>: Library for creating interactive maps.</li>
+<li><strong>rasterio</strong>: Library for raster data analysis.</li>
+<li><strong>geopandas</strong>: Extends the pandas library to allow spatial operations particularly for vector data.</li>
+</ul>
+<p>If you are in a Windows OS, follow <a href="https://github.com/soilwater/pynotes-gee/blob/main/notebooks/geopandas_windows_installation_guide.ipynb">this installation guide</a> to install several of the required packages.</p>
+</section>
+<section id="gee-account-setup" class="level4">
+<h4 class="anchored" data-anchor-id="gee-account-setup">GEE Account Setup:</h4>
+<ol type="1">
+<li><strong>Create a Google Account</strong>: If you don’t have one already, sign up for a Google Account.</li>
+<li><strong>Join Google Earth Engine</strong>: Visit the <a href="https://code.earthengine.google.com/register">Google Earth Engine website</a> and register for commercial or non-commercial use (free for academic and research use).</li>
+<li><strong>Project Creation</strong>: Once your access is approved, create a new project in the Google Developers Console.</li>
+</ol>
+</section>
+<section id="authentication" class="level4">
+<h4 class="anchored" data-anchor-id="authentication">Authentication:</h4>
+<ol type="1">
+<li><strong>Install the Earth Engine Python API</strong>: Use <code>pip install earthengine-api</code> to install the Earth Engine Python API.</li>
+<li>Open a new Jupyter notebook and import the Google Earth Engine module using <code>import ee</code>. We will do this at the beginning of each tutorial.</li>
+<li><strong>Authenticate with Earth Engine</strong>: Run <code>ee.Authenticate()</code> and follow the instructions to authenticate your account.</li>
+</ol>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

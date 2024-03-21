@@ -296,24 +296,37 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </header>
 
 <p>Perhaps, one of the simplest and most basic operations in Google Earth Engine is to retrieve information for a single point. Typical examples include elevation, mean annual temperature, and soil properties. In other words, this type of operations is mostly intended at retrieving information that does not change with time.</p>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> folium</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="2">
+<div class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ee.Authenticate()</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ee.Authenticate()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the library.</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While we need to run <code>ee.Initialize()</code> everytime we start a notebook or restart the Python kernel, we only need to authenticate once, so a handy tip is to mute the <code>ee.Initialize()</code> line with a <code>#</code> once you are done. Note that after several hours or days of inactivity you will need to authenticate again.</p>
+</div>
 </div>
 <section id="example-1-elevation" class="level2">
 <h2 class="anchored" data-anchor-id="example-1-elevation">Example 1: Elevation</h2>
 <p>In the following example we will retrieve the elevation for a specific point on Earth.</p>
 <p><strong>Product</strong>: USGS/SRTMGL1_003</p>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
@@ -323,11 +336,24 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore point geometry</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>point.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>{'type': 'Point', 'coordinates': [-96.576844, 39.186512]}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="4">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In this tutorial we will use the <code>.getInfo()</code> method to print the underlying data and metadata of multiple objects, so that you can see the output and become more familiar with GEE data structures and the geoJSON format. This information is also valubale for debugging code errors. However, you don’t typically want to clutter your notebooks with these long outputs, so we will skip some of these steps in future tutorials.</p>
+</div>
+</div>
+<div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load digital elevation model (DEM) from Shuttle Radar Topography Mission (SRTM) </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dem <span class="op">=</span> ee.Image(<span class="st">'USGS/SRTMGL1_003'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -335,7 +361,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain some information about the DEM layer (output is long!)</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us close to the answer, but we are not there yet</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.sample(point, <span class="dv">1</span>).getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -348,17 +374,17 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
  'type': 'FeatureCollection'}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us even closer to the answer, but we are not there yet</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dem.sample(point, <span class="dv">1</span>).first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>{'type': 'Feature',
  'geometry': None,
  'id': '0',
  'properties': {'elevation': 317}}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="7">
+<div class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us the correct value</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>elev <span class="op">=</span> dem.sample(point, <span class="dv">1</span>).first().getNumber(<span class="st">'elevation'</span>).getInfo()</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Elevation: </span><span class="sc">{</span>elev<span class="sc">}</span><span class="ss"> m'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -371,7 +397,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="example-2-weather-variables">Example 2: Weather variables</h2>
 <p>Obtain the long-term mean annual air temperature and precipitation for a specific location</p>
 <p><strong>Product</strong>: For more information about bands and units visit: <a href="https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_BIO">WorldClim BIO</a></p>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
@@ -379,7 +405,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coordinates into a Point geometry following the x,y notation</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon, lat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="9">
+<div class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load WorldClim BIO dataset</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.Image(<span class="st">'WORLDCLIM/V1/BIO'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -387,7 +413,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access metadata of the product (output is long!)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dataset.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="12">
+<div class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term mean annual air temperature</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>T_mean <span class="op">=</span> dataset.select(<span class="st">'bio01'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'bio01'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual air temperature: </span><span class="sc">{</span><span class="bu">round</span>(T_mean,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> Celsius'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -395,7 +421,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <pre><code>Mean annual air temperature: 12.2 Celsius</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="11">
+<div class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term annual precipitation</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>P_annual <span class="op">=</span> dataset.select(<span class="st">'bio12'</span>).sample(point,<span class="dv">1</span>).first().get(<span class="st">'bio12'</span>).getInfo()</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual precipitation: </span><span class="sc">{</span><span class="bu">round</span>(P_annual,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -408,11 +434,11 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="example-3-reference-et">Example 3: Reference ET</h2>
 <p>In this example we will retrieve daily values of reference evapotranspiration for a point.</p>
 <p><strong>Product</strong>: For more information visit the description in Google Earth Engine of <a href="https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_GRIDMET?hl=en">GRIDMET</a></p>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define point</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([<span class="op">-</span><span class="fl">96.576844</span>, <span class="fl">39.186512</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="9">
+<div class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain GRIDMET dataset for a specific period. End date is excluded from the call</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-01'</span>)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-02'</span>)</span>
@@ -428,12 +454,12 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dataset.get(<span class="st">'description'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about first image within the collection</span></span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about first image within the collection (output is long!)</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dataset.first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature collection</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dataset.first().sample(point,<span class="dv">1</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dataset.first().sample(point,<span class="dv">1</span>).getInfo() <span class="co"># Sample at 1 meter resolution</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>{'type': 'FeatureCollection',
  'columns': {'bi': 'Float',
@@ -489,59 +515,62 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
     'vs': 2.799999952316284}}]}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>eto <span class="op">=</span> dataset.first().sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The grass reference ET is </span><span class="sc">{</span>eto<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>The grass reference ET is 4.5 mm</code></pre>
+<pre><code>The grass reference ET is 4.400000095367432 mm</code></pre>
 </div>
 </div>
 <p>Alternative solution: Access the image directly rather than the collection.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ee.Image(<span class="st">'IDAHO_EPSCOR/GRIDMET/20220701'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell" data-execution_count="9">
+<section id="get-dataset-timestamps" class="level4">
+<h4 class="anchored" data-anchor-id="get-dataset-timestamps">Get dataset timestamps</h4>
+<div class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the START time of the dataset to check that it matches our request.</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_start'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="32">
 <pre><code>1656655200000</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="10">
+<div class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the </span><span class="re">END</span><span class="co"> time of the dataset to check that it matches our request.</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_end'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="33">
 <pre><code>1656741600000</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="11">
+<div class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the datetime of the serial date numbers</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Input in "fromtimestamp()" has to be in seconds, so we divide by 1000</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Start time:'</span>, datetime.datetime.fromtimestamp(<span class="dv">1656655200000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'End time:'</span>, datetime.datetime.fromtimestamp(<span class="dv">1656741600000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Start time:'</span>, datetime.fromtimestamp(<span class="dv">1656655200000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'End time:'</span>, datetime.fromtimestamp(<span class="dv">1656741600000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Start time: 2022-07-01 01:00:00.000000
 End time: 2022-07-02 01:00:00.000000</code></pre>
 </div>
 </div>
 </section>
+</section>
 <section id="example-4-retrieve-soil-properties-for-a-given-location" class="level2">
 <h2 class="anchored" data-anchor-id="example-4-retrieve-soil-properties-for-a-given-location">Example 4: Retrieve soil properties for a given location</h2>
 <p>Product: SoilGrids</p>
 <p>Source: https://samapriya.github.io/awesome-gee-community-datasets/projects/isric/</p>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the SoilGrids dataset from GEE</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>soil_grids <span class="op">=</span> ee.Image(<span class="st">"projects/soilgrids-isric/sand_mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a point geometry</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">37.839154</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">99.101594</span></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon,lat)</span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>sand <span class="op">=</span> soil_grids.sample(point,<span class="dv">250</span>).first().getNumber(<span class="st">'sand_0-5cm_mean'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The percentage of sand at (</span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>lon<span class="sc">}</span><span class="ss">) is: </span><span class="sc">{</span><span class="bu">round</span>(sand)<span class="sc">}</span><span class="ss"> %'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The percentage of sand at (37.839154,-99.101594) is: 53 %</code></pre>
