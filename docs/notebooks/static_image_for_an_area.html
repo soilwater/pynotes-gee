@@ -612,25 +612,22 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>usdm_collection <span class="op">=</span> ee.ImageCollection(<span class="st">"projects/sat-io/open-datasets/us-drought-monitor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To access a specific number of items from a collection, we can use the <code>.toList()</code> method. For instance, to return the first three images of the U.S. Drought Monitor collection defined above we can run the following command: <code>usdm_collection.toList(3).getInfo()</code></p>
-<pre><code>
-::: {.cell execution_count=21}
-``` {.python .cell-code}
-# Define function to get dates from each ee.Image object
-get_date = lambda image: ee.Image(image).date().format('YYYY-MM-dd')
-
-# Get the size of the image collection
-N = usdm_collection.size()
-
-
-# Apply function to collection
-usdm_dates = usdm_collection.toList(N).map(get_date).getInfo()
-
-# Iterate over all the dates and select images for August 2011
-for k,date in enumerate(usdm_dates):
-    date = datetime.strptime(date, '%Y-%m-%d')
-    if date.year == 2012 and date.month == 10:
-        print(k, date)
-</code></pre>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define function to get dates from each ee.Image object</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>get_date <span class="op">=</span> <span class="kw">lambda</span> image: ee.Image(image).date().<span class="bu">format</span>(<span class="st">'YYYY-MM-dd'</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the size of the image collection</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> usdm_collection.size()</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply function to collection</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>usdm_dates <span class="op">=</span> usdm_collection.toList(N).<span class="bu">map</span>(get_date).getInfo()</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate over all the dates and select images for August 2011</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k,date <span class="kw">in</span> <span class="bu">enumerate</span>(usdm_dates):</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    date <span class="op">=</span> datetime.strptime(date, <span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> date.year <span class="op">==</span> <span class="dv">2012</span> <span class="kw">and</span> date.month <span class="op">==</span> <span class="dv">10</span>:</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(k, date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>666 2012-10-02 00:00:00
 667 2012-10-09 00:00:00
@@ -638,7 +635,7 @@ for k,date in enumerate(usdm_dates):
 669 2012-10-23 00:00:00
 670 2012-10-30 00:00:00</code></pre>
 </div>
-<p>:::</p>
+</div>
 <p>Note that the following code will not work:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>get_date <span class="op">=</span> <span class="kw">lambda</span> image: image.date().<span class="bu">format</span>(<span class="st">'YYYY-MM-dd'</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>usdm_dates <span class="op">=</span> usdm_collection.<span class="bu">map</span>(get_date).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
