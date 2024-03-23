@@ -108,6 +108,9 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -264,8 +267,9 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
   <ul>
   <li><a href="#define-helper-functions" id="toc-define-helper-functions" class="nav-link active" data-scroll-target="#define-helper-functions">Define helper functions</a></li>
   <li><a href="#example-1-state-level-elevation" id="toc-example-1-state-level-elevation" class="nav-link" data-scroll-target="#example-1-state-level-elevation">Example 1: State level elevation</a></li>
-  <li><a href="#example-2-soil-textural-class" id="toc-example-2-soil-textural-class" class="nav-link" data-scroll-target="#example-2-soil-textural-class">Example 2: Soil textural class</a></li>
+  <li><a href="#example-2-state-level-soil-textural-class" id="toc-example-2-state-level-soil-textural-class" class="nav-link" data-scroll-target="#example-2-state-level-soil-textural-class">Example 2: State level soil textural class</a></li>
   <li><a href="#example-3-regional-soil-properties" id="toc-example-3-regional-soil-properties" class="nav-link" data-scroll-target="#example-3-regional-soil-properties">Example 3: Regional soil properties</a></li>
+  <li><a href="#example-4-regional-drought" id="toc-example-4-regional-drought" class="nav-link" data-scroll-target="#example-4-regional-drought">Example 4: Regional drought</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/soilwater/pynotes-gee/blob/main/notebooks/static_image_for_an_area.ipynb" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
@@ -311,7 +315,11 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors, colormaps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors, colormaps</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
@@ -353,7 +361,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </section>
 <section id="example-1-state-level-elevation" class="level2">
 <h2 class="anchored" data-anchor-id="example-1-state-level-elevation">Example 1: State level elevation</h2>
-<div class="cell" data-execution_count="92">
+<div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read US states</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>US_states <span class="op">=</span> ee.FeatureCollection(<span class="st">"TIGER/2018/States"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -363,16 +371,16 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(region).mask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="93">
+<div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get image with elevation data from the Shuttle Radar Topography Mission (SRTM)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>srtm <span class="op">=</span> ee.Image(<span class="st">"USGS/SRTMGL1_003"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>elev_img <span class="op">=</span> srtm.clip(region).mask(mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="94">
+<div class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get colormap for both geotiff raster and folium raster amp </span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> get_hex_cmap(<span class="st">'Spectral'</span>, <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="95">
+<div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save geotiff</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>elev_filename <span class="op">=</span> <span class="st">'../outputs/kansas_elevation_250m.tif'</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(elev_img, elev_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">250</span>, geom<span class="op">=</span>region.geometry())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -380,11 +388,11 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="96">
+<div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read GeoTiff file using Xarray (and remove extra dimension)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>elev_raster <span class="op">=</span> xr.open_dataarray(elev_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="97">
+<div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>elev_raster.plot.imshow(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">3</span>), cmap<span class="op">=</span><span class="st">'Spectral'</span>, add_colorbar<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                   cbar_kwargs<span class="op">=</span>{<span class="st">'label'</span>:<span class="st">'Elevation m'</span>})<span class="op">;</span></span>
@@ -399,13 +407,13 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </div>
 </div>
 </section>
-<section id="example-2-soil-textural-class" class="level2">
-<h2 class="anchored" data-anchor-id="example-2-soil-textural-class">Example 2: Soil textural class</h2>
+<section id="example-2-state-level-soil-textural-class" class="level2">
+<h2 class="anchored" data-anchor-id="example-2-state-level-soil-textural-class">Example 2: State level soil textural class</h2>
 <p>In this example we will plot the 12 soil textural classes for the state of Kansas. We will also learn how to use Matplotlib’s object-based syntax to define a colorbar with custom labels. The source for this example is from the 800-meter spatial resolution gridded soil product created by Walkinshaw et al.&nbsp;(2020) using the USDA-NRCS Soil Survey Geodatabase. Check out the link below for some cool maps:</p>
 <ul>
 <li>Walkinshaw, Mike, A.T. O’Geen, D.E. Beaudette. “Soil Properties.” California Soil Resource Lab, 1 Oct.&nbsp;2020, casoilresource.lawr.ucdavis.edu/soil-properties/.</li>
 </ul>
-<div class="cell" data-execution_count="98">
+<div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read US states</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>US_states <span class="op">=</span> ee.FeatureCollection(<span class="st">"TIGER/2018/States"</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -415,7 +423,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(region).mask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="99">
+<div class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>url_link <span class="op">=</span> <span class="st">'projects/earthengine-legacy/assets/projects/sat-io/open-datasets/CSRL_soil_properties/physical/soil_texture_profile/texture_025'</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>texture_img <span class="op">=</span> ee.Image(url_link).clip(region).mask(mask)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -444,11 +452,11 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="100">
+<div class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read saved geotiff image</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>texture_raster <span class="op">=</span> xr.open_dataarray(texture_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="101">
+<div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">3</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>raster <span class="op">=</span> texture_raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>texture_cmap, </span>
@@ -480,7 +488,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </section>
 <section id="example-3-regional-soil-properties" class="level2">
 <h2 class="anchored" data-anchor-id="example-3-regional-soil-properties">Example 3: Regional soil properties</h2>
-<div class="cell" data-execution_count="102">
+<div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ecoregions map</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://developers.google.com/earth-engine/datasets/catalog/RESOLVE_ECOREGIONS_2017#description</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>eco_regions <span class="op">=</span> ee.FeatureCollection(<span class="st">"RESOLVE/ECOREGIONS/2017"</span>)</span>
@@ -496,7 +504,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </div>
 <section id="load-maps-of-soil-physical-properties" class="level4">
 <h4 class="anchored" data-anchor-id="load-maps-of-soil-physical-properties">Load maps of soil physical properties</h4>
-<div class="cell" data-execution_count="103">
+<div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SAND</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Select layer, clip to region, and then mask</span></span>
@@ -511,7 +519,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="104">
+<div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SOIL ORGANIC CARBON</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Select layer, clip to region, and then mask</span></span>
@@ -528,12 +536,12 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="105">
+<div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read GeoTiff images saved in our local drive</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sand_raster <span class="op">=</span> xr.open_dataarray(sand_filename).squeeze()</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>soc_raster <span class="op">=</span> xr.open_dataarray(soc_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="109">
+<div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>fs <span class="op">=</span> <span class="dv">12</span> <span class="co"># Define font size variable</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -572,9 +580,147 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <p><img src="static_image_for_an_area_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="example-4-regional-drought" class="level2">
+<h2 class="anchored" data-anchor-id="example-4-regional-drought">Example 4: Regional drought</h2>
+<p>In this example we will explore how to retrieve available dates for an Image Collection and then we will use that information to select a specific Image. More specifically, to illsutrate these concepts we will use the collection from the U.S. Drought Monitor, that releases weekly maps of drought conditions for the United States. The selected region for the map is the area covering the Ogallala aquifer, which is one of the largest aquifers in the world spanning multiple states in the U.S. Great Plains.</p>
+<section id="read-boundary" class="level4">
+<h4 class="anchored" data-anchor-id="read-boundary">Read boundary</h4>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import boundary for Ogallala Aquifer from local drive</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>filename_bnd <span class="op">=</span> <span class="st">'../datasets/ogallala_aquifer_bnd.geojson'</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the file</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(filename_bnd) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    roi_json <span class="op">=</span> json.load(<span class="bu">file</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coordinates for plot</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>lon,lat <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>roi_json[<span class="st">'features'</span>][<span class="dv">0</span>][<span class="st">'geometry'</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>])</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the ee.Geometry so that GEE can use it</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>roi_geom <span class="op">=</span> ee.Geometry(roi_json[<span class="st">'features'</span>][<span class="dv">0</span>][<span class="st">'geometry'</span>])</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mask</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> ee.Image.constant(<span class="dv">1</span>).clip(roi_geom).mask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-usdm-image-collection" class="level4">
+<h4 class="anchored" data-anchor-id="load-usdm-image-collection">Load USDM image collection</h4>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load U.S. Drought monitor Image Collection</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>usdm_collection <span class="op">=</span> ee.ImageCollection(<span class="st">"projects/sat-io/open-datasets/us-drought-monitor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To access a specific number of items from a collection, we can use the <code>.toList()</code> method. For instance, to return the first three images of the U.S. Drought Monitor collection defined above we can run the following command: <code>usdm_collection.toList(3).getInfo()</code></p>
+<pre><code>
+::: {.cell execution_count=21}
+``` {.python .cell-code}
+# Define function to get dates from each ee.Image object
+get_date = lambda image: ee.Image(image).date().format('YYYY-MM-dd')
+
+# Get the size of the image collection
+N = usdm_collection.size()
+
+
+# Apply function to collection
+usdm_dates = usdm_collection.toList(N).map(get_date).getInfo()
+
+# Iterate over all the dates and select images for August 2011
+for k,date in enumerate(usdm_dates):
+    date = datetime.strptime(date, '%Y-%m-%d')
+    if date.year == 2012 and date.month == 10:
+        print(k, date)
+</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>666 2012-10-02 00:00:00
+667 2012-10-09 00:00:00
+668 2012-10-16 00:00:00
+669 2012-10-23 00:00:00
+670 2012-10-30 00:00:00</code></pre>
+</div>
+<p>:::</p>
+<p>Note that the following code will not work:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>get_date <span class="op">=</span> <span class="kw">lambda</span> image: image.date().<span class="bu">format</span>(<span class="st">'YYYY-MM-dd'</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>usdm_dates <span class="op">=</span> usdm_collection.<span class="bu">map</span>(get_date).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The reason it does not work is because a mapping algorithm on a collection must return a Feature or Image, and the above code returns a date string.</p>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read specific image</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>image_number <span class="op">=</span> <span class="dv">670</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>usdm_img <span class="op">=</span> ee.Image(usdm_collection.toList(N).get(image_number))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Clip and add 1 to the layer, so that we represent "None" as 0</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>usdm_img <span class="op">=</span> usdm_img.clip(roi_geom).add(<span class="dv">1</span>).mask(mask)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get latest image of collection</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># usdm_img = ee.Image(usdm_collection.toList(N).get(-1)).mask(mask)</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Get first image of collection</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># usdm_img = ee.Image(usdm_collection.toList(N).get(0)).mask(mask) # or</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co"># usdm_img = ee.Image(usdm_collection.toList(1)).mask(mask)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define colormap</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>usdm_hex_palette <span class="op">=</span> [<span class="st">"#FFFFFF"</span>, <span class="st">"#FFFF00"</span>, <span class="st">"#FCD37F"</span>, <span class="st">"#FFAA00"</span>, <span class="st">"#E60000"</span>, <span class="st">"#730000"</span>]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization parameters</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>usdm_cmap <span class="op">=</span> colors.ListedColormap(usdm_hex_palette)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>usdm_cmap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<div style="vertical-align: middle;"><strong>from_list</strong> </div><div class="cmap"><img alt="from_list colormap" title="from_list" style="border: 1px solid #555;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAABACAYAAABsv8+/AAAAGHRFWHRUaXRsZQBmcm9tX2xpc3QgY29sb3JtYXBDL89FAAAAHnRFWHREZXNjcmlwdGlvbgBmcm9tX2xpc3QgY29sb3JtYXABtCnOAAAAMHRFWHRBdXRob3IATWF0cGxvdGxpYiB2My44LjMsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmeqnk4cAAAAMnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHYzLjguMywgaHR0cHM6Ly9tYXRwbG90bGliLm9yZ4Q40TsAAAFJSURBVHic7dZBDUJBFMBAPnjEDkEA7kiQgAqyqICXbGcU9NhjrbVO/MAxHbCdz/M2nbCdy+s+nbCd93W6YD+P6YBNnacDAID/MwAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAggwAAAQZAAAIMgAAEGQAACDIAABAkAEAgCADAABBBgAAgr6cignySglYnAAAAABJRU5ErkJggg=="></div><div style="vertical-align: middle; max-width: 514px; display: flex; justify-content: space-between;"><div style="float: left;"><div title="#ffffffff" style="display: inline-block; width: 1em; height: 1em; margin: 0; vertical-align: middle; border: 1px solid #555; background-color: #ffffffff;"></div> under</div><div style="margin: 0 auto; display: inline-block;">bad <div title="#00000000" style="display: inline-block; width: 1em; height: 1em; margin: 0; vertical-align: middle; border: 1px solid #555; background-color: #00000000;"></div></div><div style="float: right;">over <div title="#730000ff" style="display: inline-block; width: 1em; height: 1em; margin: 0; vertical-align: middle; border: 1px solid #555; background-color: #730000ff;"></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get map from url (it may take several seconds)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>image_url <span class="op">=</span> usdm_img.getDownloadUrl({</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'region'</span>: roi_geom,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'scale'</span>:<span class="dv">1_000</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'crs'</span>: <span class="st">'EPSG:4326'</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'format'</span>: <span class="st">'GEO_TIFF'</span>})</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data using URL and save data as a new GeoTiff file</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(image_url)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if the request was successful</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> response.status_code <span class="op">==</span> <span class="dv">200</span>:</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read image data into a BytesIO object</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    image_data <span class="op">=</span> io.BytesIO(response.content)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    fig,ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">6</span>))</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use Xarray to open the raster image directly from memory</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    raster <span class="op">=</span> xr.open_dataarray(image_data, engine<span class="op">=</span><span class="st">'rasterio'</span>).squeeze()</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create raster map showing drought conditions</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    usdm_map <span class="op">=</span> raster.plot.imshow(ax<span class="op">=</span>ax, cmap<span class="op">=</span>usdm_cmap, </span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                                  vmin<span class="op">=-</span><span class="fl">0.5</span>, vmax<span class="op">=</span><span class="fl">5.5</span>, add_colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add aquifer boundaries</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    ax.plot(lon, lat, color<span class="op">=</span><span class="st">'k'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add colorbar</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    cbar <span class="op">=</span> fig.colorbar(usdm_map, ax<span class="op">=</span>ax, shrink<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Drought Intensity'</span>)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add labels in the center of each segment</span></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    cbar.set_ticks(ticks<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>                   labels<span class="op">=</span>[<span class="st">'None'</span>,<span class="st">'D0'</span>,<span class="st">'D1'</span>,<span class="st">'D2'</span>,<span class="st">'D3'</span>,<span class="st">'D4'</span>])</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add labels</span></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'Ogallala Aquifer </span><span class="sc">{</span>usdm_dates[image_number]<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Longitude'</span>)</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Latitude'</span>)</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    plt.grid(linestyle<span class="op">=</span><span class="st">':'</span>)</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="static_image_for_an_area_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+
+
+</div></section>
 </section>
 
 </main> <!-- /main -->

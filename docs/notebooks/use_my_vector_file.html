@@ -300,14 +300,15 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 
 <p>What if we want to use Google Earth Engine for our own region of interest? This could be our own field boundary, watershed, or perhaps some experimental plot. The nice part, is the we can turn any vector map into a GEE Geometry using a GeoJSON file. Let’s dive into an example using a boundary layer for the Ogallala Aquifer.</p>
 <p>You can download the file from the <a href="https://github.com/soilwater/pynotes-gee/blob/main/datasets/ogallala_aquifer_bnd.geojson">Github repository</a></p>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-execution_count="51">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
@@ -349,11 +350,20 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
  [-105.14733301403585, 41.821369666176125]]</code></pre>
 <p>The catch is that for plotting we need latitude and longitude in separate lists. Here is where Python shines. We typically use the <code>zip</code> function to create the above structure from individual columns. We can use the same <code>zip</code> function with the <code>*</code> operator to do the inverse. Sometimes we call this operation <code>unpacking</code>, because we turn a list packed with other lists, into separate lists.</p>
 <p>First we need to learn how to access the raw data that we need. The code line belows shows how to access the nested coordinates, so that then we can use this line with the <code>zip</code> function. Remember to go step by step when breaking down the problem.</p>
-<div class="cell" data-execution_count="12">
+<div class="cell" data-execution_count="52">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the first 10 coordinate pairs inside of the geojson file (full output is long!)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(roi_json[<span class="st">'features'</span>][<span class="dv">0</span>][<span class="st">'geometry'</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>][<span class="dv">0</span>:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pprint(roi_json[<span class="st">'features'</span>][<span class="dv">0</span>][<span class="st">'geometry'</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>][<span class="dv">0</span>:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[-105.08669315719459, 41.81747353490203], [-105.12647954793552, 41.819996817840824], [-105.14733301403585, 41.821369666176125], [-105.18923395737376, 41.807798034351976], [-105.24321303184018, 41.771571878769855], [-105.26291012100836, 41.78519856399359], [-105.28731840106028, 41.77917046505193], [-105.29891733873183, 41.79071058205539], [-105.30166992435787, 41.811543641132005], [-105.30989321696639, 41.83043187567255]]</code></pre>
+<pre><code>[[-105.08669315719459, 41.81747353490203],
+ [-105.12647954793552, 41.819996817840824],
+ [-105.14733301403585, 41.821369666176125],
+ [-105.18923395737376, 41.807798034351976],
+ [-105.24321303184018, 41.771571878769855],
+ [-105.26291012100836, 41.78519856399359],
+ [-105.28731840106028, 41.77917046505193],
+ [-105.29891733873183, 41.79071058205539],
+ [-105.30166992435787, 41.811543641132005],
+ [-105.30989321696639, 41.83043187567255]]</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="8">

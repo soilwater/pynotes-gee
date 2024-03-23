@@ -226,6 +226,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#basic-concepts-of-geographic-information-systems" id="toc-basic-concepts-of-geographic-information-systems" class="nav-link active" data-scroll-target="#basic-concepts-of-geographic-information-systems">Basic concepts of geographic information systems</a></li>
+  <li><a href="#geojson" id="toc-geojson" class="nav-link" data-scroll-target="#geojson">GeoJSON</a></li>
   <li><a href="#google-earth-building-blocks" id="toc-google-earth-building-blocks" class="nav-link" data-scroll-target="#google-earth-building-blocks">Google Earth building blocks</a>
   <ul class="collapse">
   <li><a href="#geometries" id="toc-geometries" class="nav-link" data-scroll-target="#geometries">Geometries</a></li>
@@ -233,9 +234,6 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
   <li><a href="#feature-collections" id="toc-feature-collections" class="nav-link" data-scroll-target="#feature-collections">Feature Collections</a></li>
   <li><a href="#images" id="toc-images" class="nav-link" data-scroll-target="#images">Images</a></li>
   <li><a href="#image-collections" id="toc-image-collections" class="nav-link" data-scroll-target="#image-collections">Image Collections</a></li>
-  </ul></li>
-  <li><a href="#geojson" id="toc-geojson" class="nav-link" data-scroll-target="#geojson">GeoJSON</a>
-  <ul class="collapse">
   <li><a href="#commonalities-and-differences" id="toc-commonalities-and-differences" class="nav-link" data-scroll-target="#commonalities-and-differences">Commonalities and Differences</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
@@ -274,30 +272,6 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <p>Vector data is advantageous for mapping features that have clear boundaries and for tasks that require precise measurements (like distance, perimeter, or area).</p>
 <p><strong>Raster Data:</strong> Raster data, on the other hand, is a grid of cells (or pixels), where each cell contains a value representing information, such as temperature, elevation, or land cover. The raster format is effective for representing continuous phenomena. Raster data is often used in: - Satellite imagery, where each pixel has spectral data values. - Digital elevation models (DEMs), where each pixel represents ground elevation. - Thematic maps, such as precipitation or land use maps, where each pixel’s value corresponds to a specific category or quantity.</p>
 <p>Raster data is especially useful for analyzing spatial variations across a region and for modeling environmental and earth surface processes.</p>
-</section>
-<section id="google-earth-building-blocks" class="level2">
-<h2 class="anchored" data-anchor-id="google-earth-building-blocks">Google Earth building blocks</h2>
-<p>Google Earth Engine (GEE) is a powerful platform for analyzing geospatial data at scale, providing a vast library of satellite imagery and geospatial datasets. The fundamental data structures of GEE are: geometries, features, feature collections, images, and image collections. Understanding these structures is key to effectively utilizing GEE for any geospatial data analysis task.</p>
-<section id="geometries" class="level3">
-<h3 class="anchored" data-anchor-id="geometries">Geometries</h3>
-<p>Geometries represent the simplest form of spatial data in GEE, describing points or shapes in geographic space. They can be points, lines, polygons, or even more complex shapes defining areas (e.g., a rectangle, a watershed, a county), routes, or specific locations on Earth’s surface.</p>
-</section>
-<section id="features" class="level3">
-<h3 class="anchored" data-anchor-id="features">Features</h3>
-<p>A Feature in GEE is a geometry with associated properties. These properties can be metadata or attributes related to the geometry, such as the name of a location, its population, a label, or any other characteristic. Features combine spatial and descriptive information, making them useful for detailed geospatial analyses.</p>
-</section>
-<section id="feature-collections" class="level3">
-<h3 class="anchored" data-anchor-id="feature-collections">Feature Collections</h3>
-<p>A Feature Collection is a group of features aggregated into a single data structure. This collection can represent a series of points, such as weather stations, or complex combinations of polygons, such as administrative boundaries, each with their own set of attributes. Feature Collections are instrumental in managing and analyzing related sets of features.</p>
-</section>
-<section id="images" class="level3">
-<h3 class="anchored" data-anchor-id="images">Images</h3>
-<p>An Image in GEE is a raster data structure, representing Earth data in grid format where each cell has a value. These images can depict various types of data, such as satellite imagery, temperature maps, elevation data, or derived indices (e.g., NDVI for vegetation analysis). An image may contain multiple bands, with each band representing a different dataset or time snapshot.</p>
-</section>
-<section id="image-collections" class="level3">
-<h3 class="anchored" data-anchor-id="image-collections">Image Collections</h3>
-<p>An Image Collection is a series of images grouped together, typically representing the same area over time. This could be a sequence of satellite images capturing changes throughout the seasons or years, or a collection of derived datasets like monthly precipitation maps. Image Collections enable temporal analyses and change detection studies over large geographic areas.</p>
-</section>
 </section>
 <section id="geojson" class="level2">
 <h2 class="anchored" data-anchor-id="geojson">GeoJSON</h2>
@@ -366,6 +340,54 @@ Tip
                 'title': 'TIGER: US Census Counties 2016'},
  'type': 'FeatureCollection',
  'version': 1566851207937615}</code></pre>
+</section>
+<section id="google-earth-building-blocks" class="level2">
+<h2 class="anchored" data-anchor-id="google-earth-building-blocks">Google Earth building blocks</h2>
+<p>Google Earth Engine (GEE) is a powerful platform for analyzing geospatial data at scale, providing a vast library of satellite imagery and geospatial datasets. The fundamental data structures of GEE are: geometries, features, feature collections, images, and image collections. Understanding these structures is key to effectively utilizing GEE for any geospatial data analysis task.</p>
+<section id="geometries" class="level3">
+<h3 class="anchored" data-anchor-id="geometries">Geometries</h3>
+<p>Geometries represent the simplest form of spatial data in GEE, describing points or shapes in geographic space. They can be points, lines, polygons, or even more complex shapes defining areas (e.g., a rectangle, a watershed, a county), routes, or specific locations on Earth’s surface.</p>
+</section>
+<section id="features" class="level3">
+<h3 class="anchored" data-anchor-id="features">Features</h3>
+<p>A Feature in GEE is a geometry with associated properties. These properties can be metadata or attributes related to the geometry, such as the name of a location, its population, a label, or any other characteristic. Features combine spatial and descriptive information, making them useful for detailed geospatial analyses.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="intro_img_1.jpg" title="geometry_features" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Geometry and Feature</figcaption>
+</figure>
+</div>
+</section>
+<section id="feature-collections" class="level3">
+<h3 class="anchored" data-anchor-id="feature-collections">Feature Collections</h3>
+<p>A Feature Collection is a group of features aggregated into a single data structure. This collection can represent a series of points, such as weather stations, or complex combinations of polygons, such as administrative boundaries, each with their own set of attributes. Feature Collections are instrumental in managing and analyzing related sets of features.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="intro_img_2.jpg" title="feature collection" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">FeatureCollection</figcaption>
+</figure>
+</div>
+</section>
+<section id="images" class="level3">
+<h3 class="anchored" data-anchor-id="images">Images</h3>
+<p>An Image in GEE is a raster data structure, representing Earth data in grid format where each cell has a value. These images can depict various types of data, such as satellite imagery, temperature maps, elevation data, or derived indices (e.g., NDVI for vegetation analysis). An image may contain multiple bands, with each band representing a different dataset or time snapshot.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="intro_img_3.jpg" title="Image" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Image</figcaption>
+</figure>
+</div>
+</section>
+<section id="image-collections" class="level3">
+<h3 class="anchored" data-anchor-id="image-collections">Image Collections</h3>
+<p>An Image Collection is a series of images grouped together, typically representing the same area over time. This could be a sequence of satellite images capturing changes throughout the seasons or years, or a collection of derived datasets like monthly precipitation maps. Image Collections enable temporal analyses and change detection studies over large geographic areas.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="intro_img_4.jpg" title="Image Collection" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">ImageCollection</figcaption>
+</figure>
+</div>
+</section>
 <section id="commonalities-and-differences" class="level3">
 <h3 class="anchored" data-anchor-id="commonalities-and-differences">Commonalities and Differences</h3>
 <ul>
