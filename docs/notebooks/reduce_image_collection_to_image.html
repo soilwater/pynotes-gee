@@ -308,7 +308,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </header>
 
 <p>Often times we are interested in summarizing a collection of images into a single image. Reducers in Google Earth Engine (GEE) are functions that aggregate data, enabling the computation of summary metrics over images, image collections, or features. Reducers can summarize data spatially, temporally, or across bands, making them powerful tools for analyzing and synthesizing large geospatial datasets.</p>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -318,7 +318,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors, colormaps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ee.Authenticate()</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -327,7 +327,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </div>
 <section id="define-helper-functions" class="level2">
 <h2 class="anchored" data-anchor-id="define-helper-functions">Define helper functions</h2>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define function to save images to the local drive </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> save_geotiff(ee_image, filename, crs, scale, geom, bands<span class="op">=</span>[]):</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -922,27 +922,27 @@ Note
 <section id="example-7-count-reducer-over-a-region" class="level2">
 <h2 class="anchored" data-anchor-id="example-7-count-reducer-over-a-region">Example 7: Count reducer over a region</h2>
 <p>The count reducer tallies the number of values, useful for counting the number of observations or pixels within a region that meet certain criteria. In this example we will find the area of Kansas covered by grasslands. If you thought that Kansas was mostly covered by cropland, then you are up for a surprise.</p>
-<div class="cell" data-execution_count="36">
+<div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read US states</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>US_states <span class="op">=</span> ee.FeatureCollection(<span class="st">"TIGER/2018/States"</span>)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select Kansas</span></span>
 <span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>region <span class="op">=</span> US_states.<span class="bu">filter</span>(ee.Filter.inList(<span class="st">'NAME'</span>,[<span class="st">'Kansas'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="37">
+<div class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Land use for 2021</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>land_use <span class="op">=</span> ee.ImageCollection(<span class="st">'USDA/NASS/CDL'</span>)<span class="op">\</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>             .<span class="bu">filter</span>(ee.Filter.date(<span class="st">'2020-01-01'</span>, <span class="st">'2021-12-31'</span>)).first().clip(region)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>land_use <span class="op">=</span> ee.ImageCollection(<span class="st">'USDA/NASS/CDL'</span>) <span class="op">\</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>             .<span class="bu">filter</span>(ee.Filter.date(<span class="st">'2021-01-01'</span>, <span class="st">'2021-12-31'</span>)).first().clip(region)</span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Select cropland layer</span></span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>cropland <span class="op">=</span> land_use.select(<span class="st">'cropland'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="39">
+<div class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select pixels for a cover</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>land_cover_value <span class="op">=</span> <span class="dv">176</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>land_cover_value <span class="op">=</span> <span class="dv">176</span> <span class="co"># This is the code for grasslands</span></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>land_cover_img <span class="op">=</span> cropland.eq(land_cover_value).selfMask()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="41">
+<div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save geotiff image</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>land_cover_filename <span class="op">=</span> <span class="st">'../outputs/land_cover_kansas.tif'</span></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>save_geotiff(land_cover_img, land_cover_filename, crs<span class="op">=</span><span class="dv">4326</span>, scale<span class="op">=</span><span class="dv">250</span>, </span>
@@ -951,11 +951,11 @@ Note
 <pre><code>Saved image</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="42">
+<div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read GeoTiff file using the Xarray package</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>land_cover_raster <span class="op">=</span> xr.open_dataarray(land_cover_filename).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="52">
+<div class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the dictionary with all the metadata into a variable</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Print this variable to see the details</span></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>region_metadata <span class="op">=</span> region.first().getInfo()</span>
@@ -964,46 +964,46 @@ Note
 <span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(region_metadata[<span class="st">'geometry'</span>][<span class="st">'geometries'</span>][<span class="dv">1</span>][<span class="st">'coordinates'</span>][<span class="dv">0</span>])</span>
 <span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">'lon'</span>,<span class="st">'lat'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="56">
+<div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create figure</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
 <span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>land_cover_raster.plot.imshow(cmap<span class="op">=</span><span class="st">'Greens'</span>, add_colorbar<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>plt.plot(df[<span class="st">'lon'</span>], df[<span class="st">'lat'</span>],<span class="st">'-k'</span>)</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Riley county EVI - 2021'</span>, size<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Kansas Grassland Land Cover'</span>, size<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Longitude'</span>, size<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Latitude'</span>, size<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>plt.xlim([<span class="op">-</span><span class="dv">97</span>,<span class="op">-</span><span class="fl">96.35</span>])</span>
 <span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>plt.ylim([<span class="dv">39</span>, <span class="fl">39.6</span>])</span>
 <span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'equal'</span>)</span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.savefig('../outputs/riley_county_median_evi.jpg', dpi=300)</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.savefig('../outputs/kansas_grasslands.jpg', dpi=300)</span></span>
 <span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="reduce_image_collection_to_image_files/figure-html/cell-46-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="63">
+<div class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reduce the collection and compute area of land cover</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Kansas has an area of 213,100 square kilometers</span></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Applyreducer</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply reducer</span></span>
 <span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>land_cover_count <span class="op">=</span> land_cover_img.reduceRegion(reducer<span class="op">=</span>ee.Reducer.count(),</span>
 <span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>                                               geometry<span class="op">=</span>region.geometry(),</span>
 <span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                                               scale<span class="op">=</span><span class="dv">250</span>)</span>
 <span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>land_cover_pixels <span class="op">=</span> land_cover_count.get(<span class="st">'cropland'</span>).getInfo()</span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'There are a total of </span><span class="sc">{</span>land_cover_pixels<span class="sc">}</span><span class="ss"> under grassland at 250 m spatial resolution'</span>)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'There are a total of </span><span class="sc">{</span>land_cover_pixels<span class="sc">:,}</span><span class="ss"> pixels under grassland at 250 m spatial resolution per pixel'</span>)</span>
 <span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>state_area <span class="op">=</span> <span class="dv">213_000</span> <span class="co"># km^2</span></span>
 <span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>state_fraction <span class="op">=</span> (land_cover_pixels<span class="op">*</span><span class="dv">250</span><span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> <span class="dv">10</span><span class="op">**</span><span class="dv">6</span> <span class="op">/</span> state_area </span>
 <span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Kansas has a </span><span class="sc">{</span><span class="bu">round</span>(state_fraction<span class="op">*</span><span class="dv">100</span>)<span class="sc">}</span><span class="ss"> % of the area covered by grassland'</span>)</span>
 <span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>There are a total of 1428376 under grassland at 250 m spatial resolution
+<pre><code>There are a total of 1,444,936 pixels under grassland at 250 m spatial resolution per pixel
 Kansas has a 42 % of the area covered by grassland</code></pre>
 </div>
 </div>
-<p>The <code>reduceRegion()</code> function applies a reducer to all the pixels in a specified region. Altrnatively you can pass options as keyword arguments using dictionary, like so:</p>
+<p>The <code>reduceRegion()</code> function applies a reducer to all the pixels in a specified region. Altrnatively you can pass options as keyword arguments using a dictionary, like so:</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>land_cover_count <span class="op">=</span> land_cover_img.reduceRegion(<span class="op">**</span>{</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'reducer'</span>: ee.Reducer.count(),</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'geometry'</span>: region.geometry(),</span>
