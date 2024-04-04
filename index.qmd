@@ -30,7 +30,7 @@ The tutorials were developed with the Anaconda package in mind, however, some tu
 - **rasterio**: Library for raster data analysis.
 - **geopandas**: Extends the pandas library to allow spatial operations particularly for vector data. 
 
-If you are in a Windows OS, follow [this installation guide](https://github.com/soilwater/pynotes-gee/blob/main/notebooks/geopandas_windows_installation_guide.ipynb) to install several of the required packages.
+You can try to install the packages in one go using: `pip install folium rasterio geopandas`
 
 #### GEE Account Setup:
 1. **Create a Google Account**: If you don't have one already, sign up for a Google Account.
