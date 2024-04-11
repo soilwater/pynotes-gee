@@ -270,7 +270,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
   <li><a href="#load-primary-and-secondary-roads" id="toc-load-primary-and-secondary-roads" class="nav-link" data-scroll-target="#load-primary-and-secondary-roads">Load primary and secondary roads</a></li>
   <li><a href="#unify-roads-into-single-multiline-feature" id="toc-unify-roads-into-single-multiline-feature" class="nav-link" data-scroll-target="#unify-roads-into-single-multiline-feature">Unify roads into single Multiline feature</a></li>
   <li><a href="#create-buffer-area-around-roads" id="toc-create-buffer-area-around-roads" class="nav-link" data-scroll-target="#create-buffer-area-around-roads">Create buffer area around roads</a></li>
-  <li><a href="#obtained-fragmented-areas" id="toc-obtained-fragmented-areas" class="nav-link" data-scroll-target="#obtained-fragmented-areas">Obtained fragmented areas</a></li>
+  <li><a href="#obtain-fragmented-areas" id="toc-obtain-fragmented-areas" class="nav-link" data-scroll-target="#obtain-fragmented-areas">Obtain fragmented areas</a></li>
   <li><a href="#load-cropland-datalayer" id="toc-load-cropland-datalayer" class="nav-link" data-scroll-target="#load-cropland-datalayer">Load cropland datalayer</a></li>
   <li><a href="#define-custom-colormap" id="toc-define-custom-colormap" class="nav-link" data-scroll-target="#define-custom-colormap">Define custom colormap</a></li>
   <li><a href="#clip-and-save-cropland-map-for-each-polygon" id="toc-clip-and-save-cropland-map-for-each-polygon" class="nav-link" data-scroll-target="#clip-and-save-cropland-map-for-each-polygon">Clip and save cropland map for each polygon</a></li>
@@ -565,9 +565,9 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </div>
 </div>
 </section>
-<section id="obtained-fragmented-areas" class="level2">
-<h2 class="anchored" data-anchor-id="obtained-fragmented-areas">Obtained fragmented areas</h2>
-<p>The key operation in this step is to compute the `difference between layers.</p>
+<section id="obtain-fragmented-areas" class="level2">
+<h2 class="anchored" data-anchor-id="obtain-fragmented-areas">Obtain fragmented areas</h2>
+<p>The key operation in this step is to compute the difference between layers.</p>
 <div class="cell" data-execution_count="248">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtained fragmented areas</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>fragmented_regions <span class="op">=</span> gpd.overlay(gdf_region, gdf_buffered_unified_roads, how<span class="op">=</span><span class="st">'difference'</span>)</span>
