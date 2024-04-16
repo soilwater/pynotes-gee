@@ -55,7 +55,7 @@ You can try to install the packages in one go using: `pip install folium geopand
 [cartoee](https://geemap.org/cartoee/): Library for creating publication quality figures.
 
 
-#### About the author
+## About the author
 Andres Patrignani is an Associate Professor of Soil Water Processes in the Department of Agronomy at Kansas State University. He teaches courses in Environmental Soil Physics and Scientific Programming and Reproducible Research. These PyNotes originated from a brief summer course on geospatial analysis using Google Earth Engine.
 
 
