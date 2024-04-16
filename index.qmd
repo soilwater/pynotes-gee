@@ -1,4 +1,4 @@
-# Introduction {.unnumbered}
+# Introduction and setup {.unnumbered}
 
 "PyNotes GEE" is a guide for agricultural professionals, environmental scientists, graduate students, and data enthusiasts looking to leverage the power of Python in conjunction with Google Earth Engine (GEE) to make better data-driven decisions, and understand and manage our planet's agricultural resources. 
 
