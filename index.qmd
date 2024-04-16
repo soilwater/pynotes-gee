@@ -20,7 +20,7 @@ First and foremost, here are two relevant links to the Google Earth Engine offic
 
 
 #### Python environemnt
-If you do not have Python installed in you machine, download the [Anaconda package](https://www.anaconda.com/download), which includes a ton of curated Python libraries for data science.
+A great way to start with Python is by downloading the [Anaconda package](https://www.anaconda.com/download), which comes with a curated selection of Python libraries tailored for data science.
 
 #### Other required packages
 
