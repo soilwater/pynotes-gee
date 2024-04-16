@@ -27,10 +27,12 @@ If you do not have Python installed in you machine, download the [Anaconda packa
 The tutorials were developed with the Anaconda package in mind, however, some tutorial make use of additional libraries. Use the command `pip install <package_name>` to add the following packages:
 
 - **folium**: Library for creating interactive maps.
-- **rasterio**: Library for raster data analysis.
 - **geopandas**: Extends the pandas library to allow spatial operations particularly for vector data. 
+- **rasterio**: Library for raster data analysis.
+- **xarray**: Package for working with labeled multidimensional arrays
+- **rioxarray**: Extends xarray's capabilities to handle geospatial raster data, including tools for easy raster input/output operations and spatial operations.
 
-You can try to install the packages in one go using: `pip install folium rasterio geopandas`
+You can try to install the packages in one go using: `pip install folium geopandas rasterio xarray rioxarray`
 
 #### GEE Account Setup:
 1. **Create a Google Account**: If you don't have one already, sign up for a Google Account.
