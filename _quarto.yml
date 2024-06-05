@@ -22,7 +22,7 @@ book:
     - notebooks/value_at_a_point.ipynb
     - notebooks/value_at_multiple_points.ipynb
     - notebooks/time_series_at_a_point.ipynb
-    - notebooks/static_image_for_an_area.ipynb
+    - notebooks/image_for_an_area.ipynb
     - notebooks/reduce_image_collection_to_image.ipynb
     - notebooks/reduce_image_collection_to_timeseries.ipynb
     - notebooks/use_my_vector_file.ipynb
