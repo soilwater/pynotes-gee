@@ -1,0 +1,9 @@
+/* Inline code: light background so it stays legible (the dracula
+   highlight style is meant for code blocks only) */
+p code:not(.sourceCode),
+li code:not(.sourceCode),
+td code:not(.sourceCode) {
+  background-color: #f1f3f5;
+  color: #9753b8;
+  border-radius: 3px;
+}

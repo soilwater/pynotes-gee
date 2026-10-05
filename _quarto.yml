@@ -5,13 +5,12 @@ project:
 book:
   title: "PyNotes GEE"
   author: "Andres Patrignani"
-  date: "3/18/2024"
+  date: "10/5/2026"
   date-format: "long"
   cover-image: cover.jpg
   favicon: favicon.jpg
   repo-url: https://github.com/soilwater/pynotes-gee
   repo-actions: [edit]
-  downloads: [pdf]
   page-navigation: true
   google-analytics: "G-H7B15Q02BW"
   
@@ -38,6 +37,7 @@ book:
 format:
   html:
     theme: cosmo
+    css: styles.css
     number-sections: true
     number-depth: 1
     code-overflow: scroll
@@ -46,4 +46,3 @@ format:
     highlight-style: dracula
     toc: true
     
-  pdf: default

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,12 +10,18 @@
 <meta name="dcterms.date" content="2024-01-26">
 <meta name="keywords" content="gee, single value, point">
 
-<title>PyNotes GEE - 3&nbsp; Value at a point</title>
+<title>3&nbsp; Value at a point – PyNotes GEE</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -24,6 +30,7 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -70,22 +77,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../notebooks/value_at_multiple_points.html" rel="next">
 <link href="../notebooks/colormaps.html" rel="prev">
 <link href="../favicon.jpg" rel="icon" type="image/jpeg">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-53dc85963c67a221f6f2030af840abbe.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-37ba022f206b5b01a78900e9d8b81299.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -94,6 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -110,21 +125,22 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 </script>
 
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/value_at_a_point.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Value at a point</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/value_at_a_point.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Value at a point</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -133,13 +149,12 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">PyNotes GEE</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/soilwater/pynotes-gee" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../PyNotes-GEE.pdf" rel="" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="https://github.com/soilwater/pynotes-gee" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -255,7 +270,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -267,7 +282,7 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
   <li><a href="#example-3-reference-et" id="toc-example-3-reference-et" class="nav-link" data-scroll-target="#example-3-reference-et">Example 3: Reference ET</a></li>
   <li><a href="#example-4-retrieve-soil-properties-for-a-given-location" id="toc-example-4-retrieve-soil-properties-for-a-given-location" class="nav-link" data-scroll-target="#example-4-retrieve-soil-properties-for-a-given-location">Example 4: Retrieve soil properties for a given location</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/soilwater/pynotes-gee/blob/main/notebooks/value_at_a_point.ipynb" class="toc-action">Edit this page</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.dev/soilwater/pynotes-gee/blob/main/notebooks/value_at_a_point.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -299,21 +314,29 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
   </div>
   
 
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>gee, single value, point</p>
+  </div>
+</div>
+
 </header>
 
-<p>Perhaps, one of the simplest and most basic operations in Google Earth Engine is to retrieve information for a single point. Typical examples include elevation, mean annual temperature, and soil properties. In other words, this type of operations is mostly intended at retrieving information that does not change with time.</p>
-<div class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
+
+<p>Perhaps, one of the simplest and most basic operations in Google Earth Engine is to retrieve information for a single point. Typical examples include elevation, mean annual temperature, and soil properties. In other words, this type of operation is mostly intended for retrieving information that does not change with time.</p>
+<div id="1e7fbf59-5516-4274-aaf0-980ed863a935" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:57.357998Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:57.357998Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:57.362897Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:57.362897Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import modules</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ee</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timezone</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
+<div id="2883e3c1-7499-4fac-bf07-256e3a1965b6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:57.362897Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:57.362897Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:58.311181Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:58.311181Z&quot;}}" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ee.Authenticate()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the library.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ee.Initialize()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -321,19 +344,19 @@ gtag('config', 'G-H7B15Q02BW', { 'anonymize_ip': true});
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Tip
+<span class="screen-reader-only">Tip</span>Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>While we need to run <code>ee.Initialize()</code> everytime we start a notebook or restart the Python kernel, we only need to authenticate once, so a handy tip is to mute the <code>ee.Initialize()</code> line with a <code>#</code> once you are done. Note that after several hours or days of inactivity you will need to authenticate again.</p>
+<p>While we need to run <code>ee.Initialize()</code> every time we start a notebook or restart the Python kernel, we only need to authenticate once, so a handy tip is to mute the <code>ee.Authenticate()</code> line with a <code>#</code> once you are done. Note that after several hours or days of inactivity you will need to authenticate again.</p>
 </div>
 </div>
 <section id="example-1-elevation" class="level2">
 <h2 class="anchored" data-anchor-id="example-1-elevation">Example 1: Elevation</h2>
 <p>In the following example we will retrieve the elevation for a specific point on Earth.</p>
 <p><strong>Product</strong>: USGS/SRTMGL1_003</p>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
+<div id="3ac4d939-7466-414e-a912-33dece3fc8aa" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:58.311181Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:58.311181Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:58.533436Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:58.533436Z&quot;}}" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -341,8 +364,8 @@ Tip
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([lon, lat])</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore point geometry</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>point.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>point.getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>{'type': 'Point', 'coordinates': [-96.576844, 39.186512]}</code></pre>
 </div>
 </div>
@@ -352,24 +375,149 @@ Tip
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note
+<span class="screen-reader-only">Note</span>Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In this tutorial we will use the <code>.getInfo()</code> method to print the underlying data and metadata of multiple objects, so that you can see the output and become more familiar with GEE data structures and the geoJSON format. This information is also valubale for debugging code errors. However, you don’t typically want to clutter your notebooks with these long outputs, so we will skip some of these steps in future tutorials.</p>
+<p>In this tutorial we will use the <code>.getInfo()</code> method to print the underlying data and metadata of multiple objects, so that you can see the output and become more familiar with GEE data structures and the geoJSON format. This information is also valuable for debugging code errors. However, you don’t typically want to clutter your notebooks with these long outputs, so we will skip some of these steps in future tutorials.</p>
 </div>
 </div>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load digital elevation model (DEM) from Shuttle Radar Topography Mission (SRTM) </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dem <span class="op">=</span> ee.Image(<span class="st">'USGS/SRTMGL1_003'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1ef52271-7e96-4598-865a-7e244f7128e1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:58.533436Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:58.533436Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:58.538627Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:58.538627Z&quot;}}" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load digital elevation model (DEM) from Shuttle Radar Topography Mission (SRTM) </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dem <span class="op">=</span> ee.Image(<span class="st">'USGS/SRTMGL1_003'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain some information about the DEM layer (output is long!)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e17fd910-8c4c-45bc-b610-01ad0a436c96" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:58.540131Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:58.540131Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:58.674447Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:58.673749Z&quot;}}" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain some information about the DEM layer (output is long!)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.getInfo())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'bands': [{'crs': 'EPSG:4326',
+            'crs_transform': [0.0002777777777777778,
+                              0,
+                              -180.0001388888889,
+                              0,
+                              -0.0002777777777777778,
+                              60.00013888888889],
+            'data_type': {'max': 32767,
+                          'min': -32768,
+                          'precision': 'int',
+                          'type': 'PixelType'},
+            'dimensions': [1296001, 417601],
+            'id': 'elevation'}],
+ 'id': 'USGS/SRTMGL1_003',
+ 'properties': {'date_range': [950227200000, 951177600000],
+                'description': '&lt;p&gt;The Shuttle Radar Topography Mission (SRTM, '
+                               'see &lt;a '
+                               'href="https://onlinelibrary.wiley.com/doi/10.1029/2005RG000183/full"&gt;Farr\n'
+                               'et al. 2007&lt;/a&gt;)\n'
+                               'digital elevation data is an international '
+                               'research effort that\n'
+                               'obtained digital elevation models on a '
+                               'near-global scale. This\n'
+                               'SRTM V3 product (SRTM Plus) is provided by '
+                               'NASA JPL\n'
+                               'at a resolution of 1 arc-second (approximately '
+                               '30m).&lt;/p&gt;&lt;p&gt;This dataset has undergone a '
+                               'void-filling process using open-source data\n'
+                               '(ASTER GDEM2, GMTED2010, and NED), as opposed '
+                               'to other versions that\n'
+                               'contain voids or have been void-filled with '
+                               'commercial sources.\n'
+                               'For more information on the different versions '
+                               'see the\n'
+                               '&lt;a '
+                               'href="https://lpdaac.usgs.gov/documents/13/SRTM_Quick_Guide.pdf"&gt;SRTM '
+                               'Quick '
+                               'Guide&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Documentation:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;&lt;a '
+                               'href="https://lpdaac.usgs.gov/documents/179/SRTM_User_Guide_V3.pdf"&gt;User&amp;#39;s '
+                               'Guide&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;a '
+                               'href="https://lpdaac.usgs.gov/documents/13/SRTM_Quick_Guide.pdf"&gt;General '
+                               'Documentation&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;a '
+                               'href="https://doi.org/10.1029/2005RG000183"&gt;Algorithm '
+                               'Theoretical Basis Document '
+                               '(ATBD)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a '
+                               'href="https://cmr.earthdata.nasa.gov/search/concepts/C1000000240-LPDAAC_ECS.html"&gt;NASA '
+                               '/ USGS / '
+                               'JPL-Caltech&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table '
+                               'class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th '
+                               'scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;elevation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Elevation&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Terms '
+                               'of Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;Unless otherwise noted, '
+                               'images and video on JPL public\n'
+                               'web sites (public sites ending with a '
+                               'jpl.nasa.gov address) may\n'
+                               'be used for any purpose without prior '
+                               'permission. For more information\n'
+                               'and exceptions visit the &lt;a '
+                               'href="https://www.jpl.nasa.gov/imagepolicy/"&gt;JPL '
+                               'Image Use Policy site&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested '
+                               'citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Farr, T.G., Rosen, '
+                               'P.A., Caro, E., Crippen, R., Duren, R., '
+                               'Hensley,\n'
+                               'S., Kobrick, M., Paller, M., Rodriguez, E., '
+                               'Roth, L., Seal, D.,\n'
+                               'Shaffer, S., Shimada, J., Umland, J., Werner, '
+                               'M., Oskin, M., Burbank,\n'
+                               'D., and Alsdorf, D.E., 2007, The shuttle radar '
+                               'topography mission:\n'
+                               'Reviews of Geophysics, v. 45, no. 2, RG2004, '
+                               'at\n'
+                               '&lt;a '
+                               'href="https://doi.org/10.1029/2005RG000183"&gt;https://doi.org/10.1029/2005RG000183&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;\n'
+                               '  table.eecat {\n'
+                               '  border: 1px solid black;\n'
+                               '  border-collapse: collapse;\n'
+                               '  font-size: 13px;\n'
+                               '  }\n'
+                               '  table.eecat td, tr, th {\n'
+                               '  text-align: left; vertical-align: top;\n'
+                               '  border: 1px solid gray; padding: 3px;\n'
+                               '  }\n'
+                               '  td.nobreak { white-space: nowrap; }\n'
+                               '&lt;/style&gt;',
+                'keywords': ['dem',
+                             'elevation',
+                             'geophysical',
+                             'nasa',
+                             'srtm',
+                             'topography',
+                             'usgs'],
+                'period': 0,
+                'product_tags': ['srtm',
+                                 'elevation',
+                                 'topography',
+                                 'dem',
+                                 'geophysical'],
+                'provider': 'NASA / USGS / JPL-Caltech',
+                'provider_url': 'https://cmr.earthdata.nasa.gov/search/concepts/C1000000240-LPDAAC_ECS.html',
+                'sample': 'https://mw1.google.com/ges/dd/images/SRTM90_V4_sample.png',
+                'source_tags': ['nasa', 'usgs'],
+                'system:asset_size': 132792638252,
+                'system:visualization_0_bands': 'elevation',
+                'system:visualization_0_gamma': '1.6',
+                'system:visualization_0_max': '6000.0',
+                'system:visualization_0_min': '0.0',
+                'system:visualization_0_name': 'Elevation',
+                'tags': ['dem',
+                         'elevation',
+                         'geophysical',
+                         'nasa',
+                         'srtm',
+                         'topography',
+                         'usgs'],
+                'thumb': 'https://mw1.google.com/ges/dd/images/SRTM90_V4_thumb.png',
+                'title': 'NASA SRTM Digital Elevation 30m',
+                'type_name': 'Image',
+                'visualization_0_bands': 'elevation',
+                'visualization_0_gamma': '1.6',
+                'visualization_0_max': '6000.0',
+                'visualization_0_min': '0.0',
+                'visualization_0_name': 'Elevation'},
+ 'type': 'Image',
+ 'version': 1641990767055141}</code></pre>
 </div>
-<div class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us close to the answer, but we are not there yet</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.sample(point, <span class="dv">1</span>).getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ffe56001-42a0-41b0-86d3-3b7ea9ebe393" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:58.675633Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:58.675633Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:58.842640Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:58.842640Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us close to the answer, but we are not there yet</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pprint(dem.sample(point, <span class="dv">1</span>).getInfo())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'columns': {'elevation': 'Short'},
  'features': [{'geometry': None,
@@ -380,20 +528,20 @@ Note
  'type': 'FeatureCollection'}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us even closer to the answer, but we are not there yet</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dem.sample(point, <span class="dv">1</span>).first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div id="a9c08474-f1e8-434e-a05c-9d650bbeca61" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:58.844646Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:58.844646Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.037564Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.037564Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us even closer to the answer, but we are not there yet</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dem.sample(point, <span class="dv">1</span>).first().getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>{'type': 'Feature',
  'geometry': None,
  'id': '0',
  'properties': {'elevation': 317}}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us the correct value</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>elev <span class="op">=</span> dem.sample(point, <span class="dv">1</span>).first().getNumber(<span class="st">'elevation'</span>).getInfo()</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Elevation: </span><span class="sc">{</span>elev<span class="sc">}</span><span class="ss"> m'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bc0fe7ba-2b20-48b2-a7a0-7a228b309f73" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.037564Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.037564Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.182482Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.181477Z&quot;}}" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the elevation value: This step will get us the correct value</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>elev <span class="op">=</span> dem.sample(point, <span class="dv">1</span>).first().getNumber(<span class="st">'elevation'</span>).getInfo()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Elevation: </span><span class="sc">{</span>elev<span class="sc">}</span><span class="ss"> m'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Elevation: 317 m</code></pre>
 </div>
@@ -403,34 +551,34 @@ Note
 <h2 class="anchored" data-anchor-id="example-2-weather-variables">Example 2: Weather variables</h2>
 <p>Obtain the long-term mean annual air temperature and precipitation for a specific location</p>
 <p><strong>Product</strong>: For more information about bands and units visit: <a href="https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_BIO">WorldClim BIO</a></p>
-<div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coordinates into a Point geometry following the x,y notation</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon, lat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="77ade073-b016-45bc-a345-2c3b10d900c6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.183483Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.183483Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.187005Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.187005Z&quot;}}" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define geographic coordinates</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">39.186512</span> <span class="co"># This is y</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">96.576844</span> <span class="co"># This is x</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert coordinates into a Point geometry following the x,y notation</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon, lat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load WorldClim BIO dataset</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.Image(<span class="st">'WORLDCLIM/V1/BIO'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f312672b-a4a4-4d15-93ee-dffe7cbcd705" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.189010Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.189010Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.191967Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.191967Z&quot;}}" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load WorldClim BIO dataset</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.Image(<span class="st">'WORLDCLIM/V1/BIO'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access metadata of the product (output is long!)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dataset.getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1a4805d3-d383-46c7-ba9d-1065ef87d9a0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.193973Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.193973Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.408846Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.408275Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the comment to access metadata of the product (output is long!)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dataset.getInfo()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term mean annual air temperature</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>T_mean <span class="op">=</span> dataset.select(<span class="st">'bio01'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'bio01'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual air temperature: </span><span class="sc">{</span><span class="bu">round</span>(T_mean,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> Celsius'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="832cb2f7-6c41-4eae-b4c7-e09536ec99ed" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.408846Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.408846Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.653350Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.653350Z&quot;}}" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term mean annual air temperature</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>T_mean <span class="op">=</span> dataset.select(<span class="st">'bio01'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'bio01'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual air temperature: </span><span class="sc">{</span><span class="bu">round</span>(T_mean,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> Celsius'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Mean annual air temperature: 12.2 Celsius</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term annual precipitation</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>P_annual <span class="op">=</span> dataset.select(<span class="st">'bio12'</span>).sample(point,<span class="dv">1</span>).first().get(<span class="st">'bio12'</span>).getInfo()</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual precipitation: </span><span class="sc">{</span><span class="bu">round</span>(P_annual,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6222126b-989d-4c0e-bcf9-53b75db472b1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.653350Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.653350Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.862879Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.862879Z&quot;}}" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get long-term annual precipitation</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>P_annual <span class="op">=</span> dataset.select(<span class="st">'bio12'</span>).sample(point,<span class="dv">1</span>).first().get(<span class="st">'bio12'</span>).getInfo()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Mean annual precipitation: </span><span class="sc">{</span><span class="bu">round</span>(P_annual,<span class="dv">1</span>)<span class="sc">}</span><span class="ss"> mm'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Mean annual precipitation: 857 mm</code></pre>
 </div>
@@ -440,33 +588,226 @@ Note
 <h2 class="anchored" data-anchor-id="example-3-reference-et">Example 3: Reference ET</h2>
 <p>In this example we will retrieve daily values of reference evapotranspiration for a point.</p>
 <p><strong>Product</strong>: For more information visit the description in Google Earth Engine of <a href="https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_GRIDMET?hl=en">GRIDMET</a></p>
-<div class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define point</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([<span class="op">-</span><span class="fl">96.576844</span>, <span class="fl">39.186512</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5fd5f892-af27-42af-8a37-75f1f6bc28f9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.862879Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.862879Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.868049Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.868049Z&quot;}}" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define point</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point([<span class="op">-</span><span class="fl">96.576844</span>, <span class="fl">39.186512</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain GRIDMET dataset for a specific period. End date is excluded from the call</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-01'</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-02'</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>day_of_interest <span class="op">=</span> ee.Date(<span class="st">'2022-03-15'</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.ImageCollection(<span class="st">'IDAHO_EPSCOR/GRIDMET'</span>).filterDate(start_date, end_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="85e3292c-1bec-4146-9ebd-8b7b5cd44f16" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.870057Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.870057Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:03:59.874418Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:03:59.873602Z&quot;}}" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain GRIDMET dataset for a specific period. End date is excluded from the call</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-01'</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> ee.Date(<span class="st">'2022-07-02'</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> ee.ImageCollection(<span class="st">'IDAHO_EPSCOR/GRIDMET'</span>).filterDate(start_date, end_date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about image collection</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pprint(dataset.getInfo())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a1c9b4e8-bfc9-460d-89f3-773f08b480a7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:03:59.875360Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:03:59.875360Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:00.091333Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:00.091333Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the comment to see information about the image collection (output is long!)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pprint(dataset.getInfo())</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the get methog to retrieve a specific property</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dataset.get(<span class="st">'description'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e4a9a5ed-fcde-4cba-a40e-239df36ba755" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:00.091333Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:00.091333Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:00.310666Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:00.310666Z&quot;}}" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the get method to retrieve a specific property</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dataset.get(<span class="st">'description'</span>).getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>'&lt;p&gt;The Gridded Surface Meteorological dataset provides\nhigh spatial resolution (~4-km) daily surface fields of temperature,\nprecipitation, winds, humidity and radiation across the contiguous\nUnited States from 1979. The dataset blends the high resolution\nspatial data from PRISM with the high temporal resolution data\nfrom the National Land Data Assimilation System (NLDAS) to produce\nspatially and temporally continuous fields that lend themselves\nto additional land surface modeling.&lt;/p&gt;&lt;p&gt;This dataset contains provisional products that are replaced with\nupdated versions when the complete source data become available.\nProducts can be distinguished by the value of the &amp;#39;status&amp;#39; property.\nAt first, assets are ingested with status=&amp;#39;early&amp;#39;. After several\ndays, they are replaced by assets with status=&amp;#39;provisional&amp;#39;.\nAfter about 2 months, they are replaced by the final assets with\nstatus=&amp;#39;permanent&amp;#39;.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a href="http://www.climatologylab.org/gridmet.html"&gt;University of California Merced&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Resolution&lt;/b&gt;&lt;br&gt;4638.3 meters\n&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cadence&lt;/b&gt;&lt;br&gt;\n  1 day\n&lt;/p&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;pr&lt;/td&gt;&lt;td&gt;&lt;p&gt;Precipitation amount&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;rmax&lt;/td&gt;&lt;td&gt;&lt;p&gt;Maximum relative humidity&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;rmin&lt;/td&gt;&lt;td&gt;&lt;p&gt;Minimum relative humidity&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;sph&lt;/td&gt;&lt;td&gt;&lt;p&gt;Specific humididy&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;srad&lt;/td&gt;&lt;td&gt;&lt;p&gt;Surface downward shortwave radiation&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;th&lt;/td&gt;&lt;td&gt;&lt;p&gt;Wind direction&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;tmmn&lt;/td&gt;&lt;td&gt;&lt;p&gt;Minimum temperature&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;tmmx&lt;/td&gt;&lt;td&gt;&lt;p&gt;Maximum temperature&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;vs&lt;/td&gt;&lt;td&gt;&lt;p&gt;Wind velocity at 10m&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;erc&lt;/td&gt;&lt;td&gt;&lt;p&gt;Energy release component&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;eto&lt;/td&gt;&lt;td&gt;&lt;p&gt;Daily reference evapotranspiration&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;bi&lt;/td&gt;&lt;td&gt;&lt;p&gt;Burning index&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;fm100&lt;/td&gt;&lt;td&gt;&lt;p&gt;100-hour dead fuel moisture&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;fm1000&lt;/td&gt;&lt;td&gt;&lt;p&gt;1000-hour dead fuel moisture&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;etr&lt;/td&gt;&lt;td&gt;&lt;p&gt;Daily reference evapotranspiration&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;vpd&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mean vapor pressure deficit&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Image Properties&lt;/b&gt;&lt;table class="eecat"&gt;&lt;tr&gt;&lt;th scope="col"&gt;Name&lt;/th&gt;&lt;th scope="col"&gt;Type&lt;/th&gt;&lt;th scope="col"&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;status&lt;/td&gt;&lt;td&gt;STRING&lt;/td&gt;&lt;td&gt;&lt;p&gt;&amp;#39;early&amp;#39;, &amp;#39;provisional&amp;#39;, or &amp;#39;permanent&amp;#39;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Terms of Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;This work (METDATA, by John Abatzoglou) is in the public\ndomain and is free of known copyright restrictions. Users should\nproperly cite the source used in the creation of any reports and\npublications resulting from the use of this dataset and note the\ndate when the data was acquired.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Abatzoglou J. T., Development of gridded surface meteorological\ndata for ecological applications and modelling, International Journal\nof Climatology. (2012) &lt;a href="https://doi.org/10.1002/joc.3413"&gt;doi:10.1002/joc.3413&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;\n  table.eecat {\n  border: 1px solid black;\n  border-collapse: collapse;\n  font-size: 13px;\n  }\n  table.eecat td, tr, th {\n  text-align: left; vertical-align: top;\n  border: 1px solid gray; padding: 3px;\n  }\n  td.nobreak { white-space: nowrap; }\n&lt;/style&gt;'</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about first image within the collection (output is long!)</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dataset.first().getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature collection</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>dataset.first().sample(point,<span class="dv">1</span>).getInfo() <span class="co"># Sample at 1 meter resolution</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div id="1a81d8b0-1cca-4296-8966-62e7cd30aac5" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:00.310666Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:00.310666Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:00.498079Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:00.498079Z&quot;}}" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about first image within the collection (output is long!)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>dataset.first().getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>{'type': 'Image',
+ 'bands': [{'id': 'pr',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'rmax',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'rmin',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'sph',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'srad',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'th',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'tmmn',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'tmmx',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'vs',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'erc',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'eto',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'bi',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'fm100',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'fm1000',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'etr',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]},
+  {'id': 'vpd',
+   'data_type': {'type': 'PixelType', 'precision': 'float'},
+   'dimensions': [1386, 585],
+   'crs': 'GEOGCS["unknown", \n  DATUM["unknown", \n    SPHEROID["Spheroid", 6378137.0, 298.257223563]], \n  PRIMEM["Greenwich", 0.0], \n  UNIT["degree", 0.017453292519943295], \n  AXIS["Longitude", EAST], \n  AXIS["Latitude", NORTH]]',
+   'crs_transform': [0.041666666666666664,
+    0,
+    -124.78749996666667,
+    0,
+    -0.041666666666666664,
+    49.42083333333334]}],
+ 'version': 1727559396388962,
+ 'id': 'IDAHO_EPSCOR/GRIDMET/20220701',
+ 'properties': {'system:time_start': 1656655200000,
+  'system:footprint': {'type': 'LinearRing',
+   'coordinates': [[-106.74062492669543, 49.46257585069892],
+    [-113.9593748919571, 49.46257584884527],
+    [-124.85170940475892, 49.4620585601637],
+    [-124.83354858089547, 25.003807946517743],
+    [-120.27578118613717, 24.963260528555146],
+    [-113.05703125852676, 24.963260546620877],
+    [-107.6429687455267, 24.99592649355212],
+    [-103.13124999231805, 24.982315818325798],
+    [-97.71718742828612, 24.982315807206604],
+    [-93.2054687043565, 24.995926577622235],
+    [-87.79140622110124, 24.963260551222906],
+    [-81.47499994941238, 24.98231586351413],
+    [-76.06093750618331, 24.982315827166854],
+    [-70.64687499780167, 24.982315812070983],
+    [-66.99145134929572, 25.003807969975153],
+    [-66.97329042095092, 49.4620585688528],
+    [-79.67031245159846, 49.46257587132357],
+    [-88.69374997570004, 49.46257588868212],
+    [-99.52187494924127, 49.462575897954686],
+    [-106.74062492669543, 49.46257585069892]]},
+  'system:time_end': 1656741600000,
+  'system:asset_size': 11134492,
+  'status': 'permanent',
+  'system:index': '20220701'}}</code></pre>
+</div>
+</div>
+<div id="4080f919-11b1-487a-bb46-2c84085e3298" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:00.498079Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:00.498079Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:00.762947Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:00.762947Z&quot;}}" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature collection</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>dataset.first().sample(point,<span class="dv">1</span>).getInfo() <span class="co"># Sample at 1 meter resolution</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>{'type': 'FeatureCollection',
  'columns': {'bi': 'Float',
   'erc': 'Float',
@@ -505,58 +846,59 @@ Note
    'id': '0',
    'properties': {'bi': 0,
     'erc': 20,
-    'eto': 4.5,
-    'etr': 5.300000190734863,
-    'fm100': 14.899999618530273,
-    'fm1000': 17.799999237060547,
-    'pr': 43.70000076293945,
-    'rmax': 90.9000015258789,
-    'rmin': 60.20000076293945,
+    'eto': 4.400000095367432,
+    'etr': 5.099999904632568,
+    'fm100': 15.199999809265137,
+    'fm1000': 18,
+    'pr': 43,
+    'rmax': 92.5,
+    'rmin': 62.599998474121094,
     'sph': 0.014340000227093697,
     'srad': 249.39999389648438,
     'th': 114,
-    'tmmn': 293.70001220703125,
-    'tmmx': 300.1000061035156,
-    'vpd': 0.7300000190734863,
+    'tmmn': 293.3999938964844,
+    'tmmx': 299.5,
+    'vpd': 0.6399999856948853,
     'vs': 2.799999952316284}}]}</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>eto <span class="op">=</span> dataset.first().sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The grass reference ET is </span><span class="sc">{</span>eto<span class="sc">}</span><span class="ss"> mm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2e8987e4-ca35-4f27-9332-057fa8ad3175" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:00.762947Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:00.762947Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:00.927214Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:00.927214Z&quot;}}" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Information about feature</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>eto <span class="op">=</span> dataset.first().sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The grass reference ET is </span><span class="sc">{</span>eto<span class="sc">}</span><span class="ss"> mm'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The grass reference ET is 4.400000095367432 mm</code></pre>
 </div>
 </div>
 <p>Alternative solution: Access the image directly rather than the collection.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ee.Image(<span class="st">'IDAHO_EPSCOR/GRIDMET/20220701'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ee.Image(<span class="st">'IDAHO_EPSCOR/GRIDMET/20220701'</span>).sample(point,<span class="dv">1</span>).first().getNumber(<span class="st">'eto'</span>).getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="get-dataset-timestamps" class="level4">
 <h4 class="anchored" data-anchor-id="get-dataset-timestamps">Get dataset timestamps</h4>
-<div class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the START time of the dataset to check that it matches our request.</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_start'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="32">
+<div id="6ca3027f-c682-4fa9-bbce-31ddb1864083" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:00.927214Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:00.927214Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:01.109367Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:01.109367Z&quot;}}" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the START time of the dataset to check that it matches our request.</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_start'</span>).getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>1656655200000</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the </span><span class="re">END</span><span class="co"> time of the dataset to check that it matches our request.</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_end'</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div id="e4dee880-1385-4ad9-b712-33e3affa269d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:01.109367Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:01.109367Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:01.304302Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:01.304302Z&quot;}}" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the </span><span class="re">END</span><span class="co"> time of the dataset to check that it matches our request.</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Response is in milliseconds since 1-Jan-1970</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>dataset.select(<span class="st">'eto'</span>).first().getNumber(<span class="st">'system:time_end'</span>).getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>1656741600000</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="36">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the datetime of the serial date numbers</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Input in "fromtimestamp()" has to be in seconds, so we divide by 1000</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Start time:'</span>, datetime.fromtimestamp(<span class="dv">1656655200000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'End time:'</span>, datetime.fromtimestamp(<span class="dv">1656741600000</span><span class="op">/</span><span class="dv">1000</span>).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7827a045-e1f2-4f36-958f-443589ec82fa" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:01.305970Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:01.305970Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:01.310591Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:01.310591Z&quot;}}" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the datetime of the serial date numbers</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Input in "fromtimestamp()" has to be in seconds, so we divide by 1000</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># GEE timestamps are in UTC, so we also specify the time zone</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Start time:'</span>, datetime.fromtimestamp(<span class="dv">1656655200000</span><span class="op">/</span><span class="dv">1000</span>, tz<span class="op">=</span>timezone.utc).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'End time:'</span>, datetime.fromtimestamp(<span class="dv">1656741600000</span><span class="op">/</span><span class="dv">1000</span>, tz<span class="op">=</span>timezone.utc).strftime(<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Start time: 2022-07-01 01:00:00.000000
-End time: 2022-07-02 01:00:00.000000</code></pre>
+<pre><code>Start time: 2022-07-01 06:00:00.000000
+End time: 2022-07-02 06:00:00.000000</code></pre>
 </div>
 </div>
 </section>
@@ -565,19 +907,21 @@ End time: 2022-07-02 01:00:00.000000</code></pre>
 <h2 class="anchored" data-anchor-id="example-4-retrieve-soil-properties-for-a-given-location">Example 4: Retrieve soil properties for a given location</h2>
 <p>Product: SoilGrids</p>
 <p>Source: https://samapriya.github.io/awesome-gee-community-datasets/projects/isric/</p>
-<div class="cell" data-execution_count="37">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the SoilGrids dataset from GEE</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>soil_grids <span class="op">=</span> ee.Image(<span class="st">"projects/soilgrids-isric/sand_mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eaecd5ef-5888-4902-bc81-d2ae1c72c3cd" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:01.310591Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:01.310591Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:01.315410Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:01.315410Z&quot;}}" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the SoilGrids dataset from GEE</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>soil_grids <span class="op">=</span> ee.Image(<span class="st">"projects/soilgrids-isric/sand_mean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a point geometry</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">37.839154</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">99.101594</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon,lat)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>sand <span class="op">=</span> soil_grids.sample(point,<span class="dv">250</span>).first().getNumber(<span class="st">'sand_0-5cm_mean'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e18d7f23-186b-49c4-b31e-b891b6d6aa29" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:01.315410Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:01.315410Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:01.457930Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:01.456706Z&quot;}}" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a point geometry</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>lat <span class="op">=</span> <span class="fl">37.839154</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>lon <span class="op">=</span> <span class="op">-</span><span class="fl">99.101594</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>point <span class="op">=</span> ee.Geometry.Point(lon,lat)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># SoilGrids reports sand content in g/kg, so we multiply by 0.1 to obtain percent</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>sand <span class="op">=</span> soil_grids.sample(point,<span class="dv">250</span>).first().getNumber(<span class="st">'sand_0-5cm_mean'</span>).multiply(<span class="fl">0.1</span>).getInfo()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The percentage of sand at (</span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>lon<span class="sc">}</span><span class="ss">) is: </span><span class="sc">{</span><span class="bu">round</span>(sand)<span class="sc">}</span><span class="ss"> %'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a2190855-c9ec-413f-8382-048cc17047de" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-10-05T17:04:01.458973Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-10-05T17:04:01.458973Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-10-05T17:04:01.462747Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-10-05T17:04:01.462747Z&quot;}}" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The percentage of sand at (</span><span class="sc">{</span>lat<span class="sc">}</span><span class="ss">,</span><span class="sc">{</span>lon<span class="sc">}</span><span class="ss">) is: </span><span class="sc">{</span><span class="bu">round</span>(sand)<span class="sc">}</span><span class="ss"> %'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The percentage of sand at (37.839154,-99.101594) is: 53 %</code></pre>
 </div>
@@ -588,43 +932,58 @@ End time: 2022-07-02 01:00:00.000000</code></pre>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -632,202 +991,354 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
-    };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script>
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../notebooks/colormaps.html" class="pagination-link">
+      <a href="../notebooks/colormaps.html" class="pagination-link" aria-label="Colormaps">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Colormaps</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../notebooks/value_at_multiple_points.html" class="pagination-link">
+      <a href="../notebooks/value_at_multiple_points.html" class="pagination-link" aria-label="Value for multiple points">
         <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Value for multiple points</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -836,4 +1347,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/soilwater/pynotes-gee/blob/main/notebooks/value_at_a_point.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>

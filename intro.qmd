@@ -14,6 +14,7 @@ Vector data is advantageous for mapping features that have clear boundaries and 
 
 **Raster Data:**
 Raster data, on the other hand, is a grid of cells (or pixels), where each cell contains a value representing information, such as temperature, elevation, or land cover. The raster format is effective for representing continuous phenomena. Raster data is often used in:
+
 - Satellite imagery, where each pixel has spectral data values.
 - Digital elevation models (DEMs), where each pixel represents ground elevation.
 - Thematic maps, such as precipitation or land use maps, where each pixel's value corresponds to a specific category or quantity.
@@ -25,15 +26,15 @@ Raster data is especially useful for analyzing spatial variations across a regio
 
 GeoJSON is a light-weight and widely used open standard format designed for representing geographical features. It is based on JSON (JavaScript Object Notation), which is very much like a Python dictionary, making it easy to read and parse by both humans and machines. 
 
-A GeoJSON supports various geometric types such as Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon, and GeometryCollection. Each geometry can also contain properties in the form of key-value pairs, allowing for the addition non-spatial attributes associated with the geographic features.
+A GeoJSON supports various geometric types such as Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon, and GeometryCollection. Each geometry can also contain properties in the form of key-value pairs, allowing for the addition of non-spatial attributes associated with the geographic features.
 
-The following example is a Feature Collection showing the GeoJSON data obtained from GEE for two counties. The keys on the very left (`columns`, `features`, `id`, `properties`, `type`, and `version`) are keys of the Feature Collection. Note that the `features` key has a list of dictionaries as its value. These two dictinaries contain the information for each county. Since each county is a dictionary, then they also have key-value pairs, like `geometry`, `id`, `properties`, and `type`. This  information is repeated in each item. If you look further, you will notice that even the `geometry` key has another dictionary inside, which contains the `coordinates` and the `type` of the geometry.
+The following example is a Feature Collection showing the GeoJSON data obtained from GEE for two counties. The keys on the very left (`columns`, `features`, `id`, `properties`, `type`, and `version`) are keys of the Feature Collection. Note that the `features` key has a list of dictionaries as its value. These two dictionaries contain the information for each county. Since each county is a dictionary, then they also have key-value pairs, like `geometry`, `id`, `properties`, and `type`. This information is repeated in each item. If you look further, you will notice that even the `geometry` key has another dictionary inside, which contains the `coordinates` and the `type` of the geometry.
 
 Certainly there are multiple levels and quite a bit of nesting, but the information has a clear, organized, and human-readable structure.
 
 ::: {.callout-tip}
 ## Tip
-The secret to understand GeoJSON objects is to pay attention to:
+The secret to understanding GeoJSON objects is to pay attention to:
 
 1) indentation,
 2) the opening `{` and closing `}` curly braces, 
@@ -41,7 +42,7 @@ The secret to understand GeoJSON objects is to pay attention to:
 4) the commas `,` that separate individual structures.
 :::
 
-The `.getInfo()` method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (`pprint`) module in Python to ensure the data is displayed clearly, like the example below. [This tutorial](https://soilwater.github.io/pynotes-gee/notebooks/value_at_a_point.html) will help you get started.
+The `.getInfo()` method in GEE allows you to print this information for any object in the notebook. You can also use the Pretty Print (`pprint`) module in Python to ensure the data is displayed clearly, like the example below. [This tutorial](notebooks/value_at_a_point.ipynb) will help you get started.
 
 ```
 {'columns': {'ALAND': 'Long',
@@ -88,7 +89,7 @@ The `.getInfo()` method in GEE allows you to print this information for any obje
 ```
 
 
-## Google Earth building blocks
+## Google Earth Engine building blocks
 
 Google Earth Engine (GEE) is a powerful platform for analyzing geospatial data at scale, providing a vast library of satellite imagery and geospatial datasets. The fundamental data structures of GEE are: geometries, features, feature collections, images, and image collections. Understanding these structures is key to effectively utilizing GEE for any geospatial data analysis task.
 
@@ -122,7 +123,7 @@ An Image Collection is a series of images grouped together, typically representi
 
 ### Commonalities and Differences
 - **Spatial Representation**: Geometries and Features represent vector data, while Images represent raster data. Feature Collections aggregate vector data, and Image Collections aggregate raster data.
-- **Data Complexity**: Geometries are the simplest, defining only shapes. Features add descriptive data to geometries. Images and Image Collections introduce the complexity of raster data, allowing for detailed analysis over discrete units of space and time
+- **Data Complexity**: Geometries are the simplest, defining only shapes. Features add descriptive data to geometries. Images and Image Collections introduce the complexity of raster data, allowing for detailed analysis over discrete units of space and time.
 - **Analysis Capabilities**: Features and Feature Collections are ideal for analyses that require descriptive data alongside spatial data. Images and Image Collections are suited for pixel-based analyses and time-series studies.
 
 ### Summary
