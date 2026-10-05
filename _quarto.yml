@@ -13,7 +13,9 @@ book:
   repo-actions: [edit]
   page-navigation: true
   google-analytics: "G-H7B15Q02BW"
-  
+  page-footer:
+    center: "PyNotes GEE by Andres Patrignani is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)."
+
   chapters:
     - index.qmd
     - intro.qmd

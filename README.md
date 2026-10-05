@@ -25,4 +25,4 @@ If you find any mistakes in the code or have suggestions for other tutorials, pl
 
 ## License
 
-This work is released under the [CC0 1.0 Universal](LICENSE) license.
+This work is licensed under a [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license. You are free to share and adapt the material for any purpose, as long as you give appropriate credit. See the [LICENSE](LICENSE) file for details.
